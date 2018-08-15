@@ -25,7 +25,6 @@
 #define _OPENCOG_INTERPRETER_H
 
 #include "../combo/vertex.h"
-
 /**
  * Attempt to rewrite the combo interpreter into something modular and efficient.
  *

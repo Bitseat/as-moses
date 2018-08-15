@@ -6,9 +6,6 @@ ADD_LIBRARY(data SHARED
         )
 
 TARGET_LINK_LIBRARIES(data
-	comboreduct
-	comboant
-    ${Boost_DATE_TIME_LIBRARY}
     ${COGUTIL_LIBRARY}
 	${ATOMSPACE_atombase_LIBRARY}
 )

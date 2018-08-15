@@ -3,11 +3,13 @@ ADD_SUBDIRECTORY(representation)
 
 ADD_LIBRARY(atomese SHARED
 		representation/load_table
-#		interpreter/Interpreter
+		#interpreter/Interpreter
+		#interpreter/logical_interpreter
 		)
 
 TARGET_LINK_LIBRARIES (atomese
 		comboreduct
+		comboant
 		${COGUTIL_LIBRARY}
 		${ATOMSPACE_LIBRARIES}
 		)

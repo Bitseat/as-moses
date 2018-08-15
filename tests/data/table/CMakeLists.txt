@@ -3,7 +3,6 @@ TARGET_LINK_LIBRARIES(tableUTest
 	data
 	comboreduct
 	comboant
-	moses
 	${Boost_DATE_TIME_LIBRARY}
 	${COGUTIL_LIBRARY}
 	${ATOMSPACE_atombase_LIBRARY}
@@ -12,8 +11,6 @@ TARGET_LINK_LIBRARIES(tableUTest
 ADD_CXXTEST(completeTruthTableUTest)
 TARGET_LINK_LIBRARIES(completeTruthTableUTest
 	data
-	atomese
-	moses
 	comboreduct
     comboant
 	${COGUTIL_LIBRARY}
