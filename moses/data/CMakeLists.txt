@@ -1,8 +1,10 @@
 ADD_SUBDIRECTORY(table)
+ADD_SUBDIRECTORY(representation)
 
 ADD_LIBRARY(data SHARED
         table/table
         table/table_io
+		representation/load_table
         )
 
 TARGET_LINK_LIBRARIES(data

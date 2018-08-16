@@ -5,5 +5,5 @@ INSTALL(FILES
 
         DESTINATION
 
-        "include/${PROJECT_NAME}/atomese/representation"
+        "include/${PROJECT_NAME}/data/representation"
         )
