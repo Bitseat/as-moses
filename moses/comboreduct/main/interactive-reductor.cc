@@ -33,7 +33,7 @@
 #include "../reduct/contin_rules.h"
 #include "../reduct/general_rules.h"
 #include "../reduct/fold_rules.h"
-#include "../table/table.h"
+#include "../../data/table/table.h"
 #include "../type_checker/type_tree.h"
 
 using namespace std;
