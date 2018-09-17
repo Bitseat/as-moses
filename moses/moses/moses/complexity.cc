@@ -1,5 +1,5 @@
 /*
- * moses/comboreduct/combo/complexity.cc
+ * moses/data/combo/complexity.cc
  *
  * Copyright (C) 2002-2008 Novamente LLC
  * All Rights Reserved
@@ -22,7 +22,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 #include <opencog/util/exceptions.h>
-#include <moses/comboreduct/combo/combo.h>
+#include <moses/data/combo/combo.h>
 
 #include "complexity.h"
 

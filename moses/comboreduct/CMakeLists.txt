@@ -1,4 +1,4 @@
-ADD_SUBDIRECTORY(combo)
+#ADD_SUBDIRECTORY(combo)
 ADD_SUBDIRECTORY(interpreter)
 ADD_SUBDIRECTORY(type_checker)
 ADD_SUBDIRECTORY(reduct)
@@ -11,24 +11,6 @@ ADD_SUBDIRECTORY(converter)
 ADD_LIBRARY(comboreduct SHARED
 	crutil/exception
 
-	combo/action
-	combo/action_symbol
-	combo/argument
-	combo/assumption
-	combo/builtin_action
-	combo/convert_ann_combo
-	combo/definite_object
-	combo/descriptions
-	combo/enum_type
-	combo/indefinite_object
-	combo/iostream_combo
-	combo/message
-	combo/perception
-	combo/procedure_call
-	combo/procedure_repository
-	combo/similarity
-	combo/simple_nn
-	combo/vertex
 
 	interpreter/interpreter
     interpreter/eval
@@ -61,7 +43,7 @@ ADD_LIBRARY(comboreduct SHARED
 )
 
 TARGET_LINK_LIBRARIES (comboreduct
-	data
+#	data
 	${COGUTIL_LIBRARY}
 	${Boost_DATE_TIME_LIBRARY}
 	${Boost_THREAD_LIBRARY}

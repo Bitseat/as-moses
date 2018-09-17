@@ -27,8 +27,8 @@
 #include <opencog/util/numeric.h>
 #include <opencog/util/mt19937ar.h>
 
-#include <moses/comboreduct/combo/vertex.h>
-#include <moses/comboreduct/combo/simple_nn.h>
+#include <moses/data/combo/vertex.h>
+#include <moses/data/combo/simple_nn.h>
 #include <moses/comboreduct/reduct/ann_rules.h>
 
 #include "pole_balancing.h"

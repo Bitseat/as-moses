@@ -28,9 +28,9 @@
 
 #include "reduct.h"
 
-#include "../combo/simple_nn.h"
-#include "../combo/vertex.h"
-#include "../combo/convert_ann_combo.h"
+#include "../../data/combo/simple_nn.h"
+#include "../../data/combo/vertex.h"
+#include "../../data/combo/convert_ann_combo.h"
 
 namespace opencog { namespace reduct {
 

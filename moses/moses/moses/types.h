@@ -40,7 +40,7 @@
 #include <opencog/util/functional.h>
 #include <opencog/util/iostreamContainer.h>
 
-#include <moses/comboreduct/combo/combo.h>
+#include <moses/data/combo/combo.h>
 #include "complexity.h"
 
 namespace opencog { namespace moses {

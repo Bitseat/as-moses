@@ -1,5 +1,5 @@
 /*
- * moses/comboreduct/combo/type_tree_def.h
+ * moses/data/combo/type_tree_def.h
  *
  * Copyright (C) 2002-2008 Novamente LLC
  * All Rights Reserved

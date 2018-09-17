@@ -26,7 +26,7 @@
 
 #include <opencog/util/numeric.h>
 
-#include <moses/comboreduct/combo/action_symbol.h>
+#include <moses/data/combo/action_symbol.h>
 #include "ant_operator.h"
 
 namespace opencog { namespace combo {

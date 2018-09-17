@@ -1,5 +1,5 @@
 /*
- * moses/comboreduct/combo/tree_generation.h
+ * moses/data/combo/tree_generation.h
  *
  * Copyright (C) 2002-2008 Novamente LLC
  * All Rights Reserved
@@ -26,8 +26,8 @@
 
 #include <opencog/util/tree.h>
 
-#include "../combo/vertex.h"
-#include "../type_checker/type_tree.h"
+#include "../../data/combo/vertex.h"
+#include "../../comboreduct/type_checker/type_tree.h"
 
 namespace opencog { namespace trees {
 

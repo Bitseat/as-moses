@@ -1,5 +1,5 @@
 /*
- * moses/comboreduct/combo/eval.h
+ * moses/data/combo/eval.h
  *
  * Copyright (C) 2002-2008 Novamente LLC
  * All Rights Reserved
@@ -32,9 +32,9 @@
 #include <opencog/util/exceptions.h>
 #include <opencog/util/mt19937ar.h>
 
-#include "../combo/vertex.h"
+#include "../../data/combo/vertex.h"
 #include "../crutil/exception.h"
-#include "../type_checker/type_tree.h"
+#include "../../comboreduct/type_checker/type_tree.h"
 
 namespace opencog { namespace combo {
 

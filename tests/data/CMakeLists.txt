@@ -1,2 +1,3 @@
+ADD_SUBDIRECTORY (combo)
 ADD_SUBDIRECTORY (table)
 ADD_SUBDIRECTORY (representation)

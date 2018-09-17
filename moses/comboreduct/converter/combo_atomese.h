@@ -25,7 +25,7 @@
 #define MOSES_COMBO_ATOMESE_H
 
 #include <opencog/atoms/base/Handle.h>
-#include <moses/comboreduct/combo/vertex.h>
+#include <moses/data/combo/vertex.h>
 #include <opencog/atoms/base/Link.h>
 
 

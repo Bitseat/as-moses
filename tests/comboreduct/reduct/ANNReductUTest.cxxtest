@@ -21,7 +21,7 @@
  */
 
 #include <moses/comboreduct/reduct/reduct.h>
-#include <moses/comboreduct/combo/combo.h>
+#include <moses/data/combo/combo.h>
 
 using namespace std;
 using namespace opencog::combo;

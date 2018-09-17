@@ -6,6 +6,7 @@ ADD_CXXTEST(iostream_scored_combo_treeUTest)
 TARGET_LINK_LIBRARIES(iostream_scored_combo_treeUTest
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -13,6 +14,7 @@ ADD_CXXTEST(KnobTurningUTest)
 TARGET_LINK_LIBRARIES(KnobTurningUTest
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -21,6 +23,7 @@ IF(Boost_MATH_C99_FOUND)
 	ADD_CXXTEST(NeighborSamplingUTest)
 	TARGET_LINK_LIBRARIES(NeighborSamplingUTest
 		moses
+		data
 		comboreduct
 		${COGUTIL_LIBRARY}
 	)
@@ -31,6 +34,7 @@ ADD_CXXTEST(FieldSetUTest)
 TARGET_LINK_LIBRARIES(FieldSetUTest
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -38,6 +42,7 @@ ADD_CXXTEST(representationUTest)
 TARGET_LINK_LIBRARIES(representationUTest
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -45,6 +50,7 @@ ADD_CXXTEST(scoringUTest)
 TARGET_LINK_LIBRARIES(scoringUTest
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -52,6 +58,7 @@ ADD_CXXTEST(metapopulationUTest)
 TARGET_LINK_LIBRARIES(metapopulationUTest
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -59,6 +66,7 @@ ADD_CXXTEST(optimizationUTest)
 TARGET_LINK_LIBRARIES(optimizationUTest
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -67,6 +75,7 @@ TARGET_LINK_LIBRARIES(MOSESUTest
 	moses_exec
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -75,6 +84,7 @@ TARGET_LINK_LIBRARIES(weightedUTest
 	moses_exec
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -83,6 +93,7 @@ TARGET_LINK_LIBRARIES(mixedUTest
 	moses_exec
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -91,6 +102,7 @@ TARGET_LINK_LIBRARIES(irisUTest
 	moses_exec
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -99,6 +111,7 @@ TARGET_LINK_LIBRARIES(selectionUTest
 	moses_exec
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -107,6 +120,7 @@ TARGET_LINK_LIBRARIES(dynFeatSelUTest
 	moses_exec
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )
 
@@ -116,5 +130,6 @@ TARGET_LINK_LIBRARIES(AntUTest
 	moses_exec
 	moses
 	comboreduct
+	data
 	${COGUTIL_LIBRARY}
 )

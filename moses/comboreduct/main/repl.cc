@@ -2,7 +2,7 @@
 #include <fstream>
 
 #include "../interpreter/interpreter.h"
-#include "../combo/procedure_repository.h"
+#include "../../data/combo/procedure_repository.h"
 #include "../ant_combo_vocabulary/ant_combo_vocabulary.h"
 
 using namespace ant_combo;

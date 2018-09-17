@@ -1,5 +1,5 @@
 /*
- * moses/comboreduct/combo/eval.cc
+ * moses/data/combo/eval.cc
  *
  * Copyright (C) 2002-2008 Novamente LLC
  * All Rights Reserved

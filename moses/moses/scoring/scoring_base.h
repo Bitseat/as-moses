@@ -27,7 +27,7 @@
 #define _MOSES_SCORING_BASE_H
 
 #include "../moses/types.h"
-#include <moses/comboreduct/combo/vertex.h>
+#include <moses/data/combo/vertex.h>
 #include <moses/data/table/table.h>
 #include <opencog/atoms/base/Handle.h>
 

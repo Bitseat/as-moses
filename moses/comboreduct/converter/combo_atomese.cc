@@ -24,7 +24,7 @@
 #include <opencog/atoms/base/Handle.h>
 #include <opencog/atoms/base/Node.h>
 #include <opencog/atoms/base/Link.h>
-#include <moses/comboreduct/combo/vertex.h>
+#include <moses/data/combo/vertex.h>
 #include "combo_atomese.h"
 
 

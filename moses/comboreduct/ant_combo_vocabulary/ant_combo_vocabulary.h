@@ -28,7 +28,7 @@
 #include "ant_perception.h"
 #include "ant_action_symbol.h"
 #include "ant_indefinite_object.h"
-#include <moses/comboreduct/combo/combo.h>
+#include <moses/data/combo/combo.h>
 
 //this namespace is defined in order to break ambiguities
 //and make coexist several vocabularies

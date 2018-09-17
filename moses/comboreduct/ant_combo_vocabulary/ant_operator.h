@@ -24,7 +24,7 @@
 #ifndef _ANT_OPERATOR_H
 #define _ANT_OPERATOR_H
 
-#include <moses/comboreduct/combo/operator_base.h>
+#include <moses/data/combo/operator_base.h>
 #include <moses/comboreduct/type_checker/type_tree.h>
 
 namespace opencog { namespace combo {

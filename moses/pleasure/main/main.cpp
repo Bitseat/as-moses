@@ -1,4 +1,4 @@
-#include "moses/comboreduct/combo/procedure_repository.h"
+#include "moses/data/combo/procedure_repository.h"
 #include "moses/comboreduct/ant_combo_vocabulary/ant_combo_vocabulary.h"
 
 #include "../pleasure/population.hpp"

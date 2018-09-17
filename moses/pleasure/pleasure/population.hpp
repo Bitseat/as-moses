@@ -1,6 +1,6 @@
 #include <list>
 
-#include <moses/comboreduct/combo/vertex.h>
+#include <moses/data/combo/vertex.h>
 #include <moses/comboreduct/type_checker/type_tree.h>
 #include <moses/comboreduct/reduct/reduct.h>
 

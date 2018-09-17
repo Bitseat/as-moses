@@ -28,7 +28,7 @@
 
 #include <opencog/util/oc_assert.h>
 
-#include <moses/comboreduct/combo/vertex.h>
+#include <moses/data/combo/vertex.h>
 #include <moses/moses/moses/types.h>
 #include <moses/moses/main/moses_exec.h>
 

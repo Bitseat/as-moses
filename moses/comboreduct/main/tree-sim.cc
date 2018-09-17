@@ -23,8 +23,8 @@
  */
 #include <iostream>
 
-#include <moses/comboreduct/combo/iostream_combo.h>
-#include <moses/comboreduct/combo/similarity.h>
+#include <moses/data/combo/iostream_combo.h>
+#include <moses/data/combo/similarity.h>
 
 int main(int argc, char** argv)
 {

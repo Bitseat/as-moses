@@ -1,4 +1,4 @@
-#include <moses/comboreduct/combo/combo.h>
+#include <moses/data/combo/combo.h>
 #include <moses/comboreduct/type_checker/type_tree.h>
 
 using namespace opencog;

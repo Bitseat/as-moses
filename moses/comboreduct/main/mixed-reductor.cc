@@ -28,7 +28,7 @@
 #include "../reduct/reduct.h"
 #include "../../data/table/table.h"
 #include "../../data/table/table_io.h"
-#include "../type_checker/type_tree.h"
+#include "../../comboreduct/type_checker/type_tree.h"
 
 using namespace std;
 using namespace opencog;

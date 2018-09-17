@@ -1,5 +1,5 @@
 /*
- * moses/comboreduct/combo/type_tree.cc
+ * moses/data/combo/type_tree.cc
  *
  * Copyright (C) 2002-2008 Novamente LLC
  * Copyright (C) 2012 Poulin Holdings
@@ -26,7 +26,7 @@
 #include <opencog/util/Logger.h>
 
 #include "type_tree.h"
-#include "../combo/descriptions.h"
+#include "../../data/combo/descriptions.h"
 
 namespace opencog { namespace combo {
 

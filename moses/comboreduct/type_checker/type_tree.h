@@ -1,5 +1,5 @@
 /*
- * moses/comboreduct/combo/type_tree.h
+ * moses/data/combo/type_tree.h
  *
  * Copyright (C) 2002-2008 Novamente LLC
  * All Rights Reserved
@@ -32,10 +32,10 @@
 
 #include <moses/comboreduct/type_checker/type_tree_def.h>
 #include <moses/comboreduct/crutil/exception.h>
-#include <moses/comboreduct/combo/vertex.h>
-#include <moses/comboreduct/combo/common_def.h>
-#include <moses/comboreduct/combo/perception.h>
-#include <moses/comboreduct/combo/procedure_call.h>
+#include <moses/data/combo/vertex.h>
+#include <moses/data/combo/common_def.h>
+#include <moses/data/combo/perception.h>
+#include <moses/data/combo/procedure_call.h>
 
 namespace opencog { namespace combo {
 

@@ -28,7 +28,7 @@
 #include <moses/moses/scoring/bscores.h>
 #include <moses/moses/scoring/behave_cscore.h>
 #include <opencog/atoms/core/NumberNode.h>
-#include <moses/comboreduct/combo/combo.h>
+#include <moses/data/combo/combo.h>
 #include <moses/moses/moses/types.h>
 #include <moses/data/table/table.h>
 #include <moses/data/table/table_io.h>

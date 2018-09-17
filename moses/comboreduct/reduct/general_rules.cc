@@ -23,7 +23,7 @@
  */
 #include "general_rules.h"
 #include "../interpreter/eval.h"
-#include <moses/comboreduct/combo/assumption.h>
+#include <moses/data/combo/assumption.h>
 #include "../crutil/exception.h"
 
 namespace opencog { namespace reduct {

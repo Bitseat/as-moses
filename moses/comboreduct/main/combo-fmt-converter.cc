@@ -28,8 +28,8 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
-#include "../combo/iostream_combo.h"
-#include "../type_checker/type_tree.h"
+#include "../../data/combo/iostream_combo.h"
+#include "../../comboreduct/type_checker/type_tree.h"
 
 using namespace boost::program_options;
 using namespace boost::algorithm;

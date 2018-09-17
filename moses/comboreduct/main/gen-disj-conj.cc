@@ -32,7 +32,7 @@
 #include <opencog/util/lazy_random_selector.h>
 #include <opencog/util/dorepeat.h>
 
-#include "../combo/iostream_combo.h"
+#include "../../data/combo/iostream_combo.h"
 
 using namespace std;
 using namespace boost::program_options;

@@ -38,9 +38,9 @@
 #include <opencog/util/Logger.h>
 #include <opencog/util/lazy_random_selector.h>
 
-#include "moses/comboreduct/combo/ann.h"
-#include "moses/comboreduct/combo/simple_nn.h"
-#include "moses/comboreduct/combo/convert_ann_combo.h"
+#include "moses/data/combo/ann.h"
+#include "moses/data/combo/simple_nn.h"
+#include "moses/data/combo/convert_ann_combo.h"
 
 #include "table.h"
 #include "table_io.h"

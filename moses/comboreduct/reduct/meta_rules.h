@@ -33,7 +33,7 @@
 
 #include <opencog/util/functional.h>
 
-#include "../type_checker/type_tree.h"
+#include "../../comboreduct/type_checker/type_tree.h"
 #include "reduct.h"
 
 namespace opencog { namespace reduct {
