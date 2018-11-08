@@ -277,3 +277,15 @@ void moses_test_scored_combo_trees(const vector<string>& arguments,
     if (scts == expected_scts)
         unlink(cmd_tmp.second.c_str());
 }
+
+void moses_test_atomese(vector<string> arguments,
+                      vector<string> expected_tr_strs)
+{       OC_ASSERT(false, "Not yet implemented");
+
+}
+
+void cheap_moses_test_atomese(vector<string> arguments,
+                        vector<string> expected_tr_strs)
+{       OC_ASSERT(false, "Not yet implemented");
+
+}
