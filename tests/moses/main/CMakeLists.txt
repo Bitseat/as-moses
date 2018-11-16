@@ -50,3 +50,10 @@ TARGET_LINK_LIBRARIES(weightedUTest
         ${COGUTIL_LIBRARY}
         )
 
+ADD_CXXTEST(MOSES_in_atomeseUTest)
+TARGET_LINK_LIBRARIES(MOSES_in_atomeseUTest
+        asmoses_exec
+        moses
+        ascombo
+        ${COGUTIL_LIBRARY}
+        )
