@@ -352,12 +352,12 @@ public:
 class scored_atomese : public boost::equality_comparable<scored_atomese>
 {
 public:
-    scored_atomese(const Handle &h,
-	                  demeID_t id=demeID_t(),
-	                  composite_score cs=composite_score(),
-	                  behavioral_score bs=behavioral_score())
-		: _atomese(h), _deme_id(id), _cscore(cs), _bscore(bs), _weight(1.0)
-		{}
+	scored_atomese(const Handle &h,
+                      demeID_t id=demeID_t(),
+                      composite_score cs=composite_score(),
+                      behavioral_score bs=behavioral_score())
+        : _atomese(h), _deme_id(id), _cscore(cs), _bscore(bs), _weight(1.0)
+        {}
 
 private:
 	Handle _atomese;
