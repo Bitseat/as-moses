@@ -84,43 +84,43 @@ static const score_t epsilon_score = FLT_EPSILON;
 
 // But modify the default sort ordering for these objects.
 struct composite_score:
-    public boost::less_than_comparable<composite_score>,
-    public boost::equality_comparable<composite_score> {
-    /// By convention, we expect score to be negative (so that
-    /// higher scores==better scores) while cpxy and penalty are both
-    /// positive.  This, higher complexity==larger number, and
-    /// bigger penalty==bigger number. The penalty is *SUBTRACTED*
-    /// from the score during evaluation!
-    //
-    // Note: we cache the total penalized_score, in order to avoid a
-    // subtraction in the comparison operator.
-    composite_score(score_t scor, complexity_t cpxy,
+	public boost::less_than_comparable<composite_score>,
+	public boost::equality_comparable<composite_score> {
+	/// By convention, we expect score to be negative (so that
+	/// higher scores==better scores) while cpxy and penalty are both
+	/// positive.  This, higher complexity==larger number, and
+	/// bigger penalty==bigger number. The penalty is *SUBTRACTED*
+	/// from the score during evaluation!
+	//
+	// Note: we cache the total penalized_score, in order to avoid a
+	// subtraction in the comparison operator.
+	composite_score(score_t scor, complexity_t cpxy,
                     score_t complexity_penalty_ = 0.0,
                     score_t uniformity_penalty_ = 0.0)
         : multiply_diversity(false), score(scor), complexity(cpxy),
           complexity_penalty(complexity_penalty_),
           uniformity_penalty(uniformity_penalty_)
-    {
-        update_penalized_score();
-    }
+	{
+		update_penalized_score();
+	}
 
-    composite_score();    // build the worst score
-    composite_score& operator=(const composite_score &r);
+	composite_score();    // build the worst score
+	composite_score& operator=(const composite_score &r);
 
-    score_t get_score() const
-    {
-        return score;
-    }
-    complexity_t get_complexity() const
-    {
-        return complexity;
-    }
-    score_t get_penalized_score() const
-    {
-        return penalized_score;
-    }
+	score_t get_score() const
+	{
+		return score;
+	}
+	complexity_t get_complexity() const
+	{
+		return complexity;
+	}
+	score_t get_penalized_score() const
+	{
+		return penalized_score;
+	}
 
-    // returns the composite score as a handle.
+	// returns the composite score as a handle.
 //  Handle as_handle() const {
 //      HandleSeq seq;
 //      seq.push_back(multiply_diversity? createLink(TRUE_LINK) : createLink(FALSE_LINK));
@@ -131,80 +131,80 @@ struct composite_score:
 //      return createLink(seq, LIST_LINK);
 //  }
 
-    // Use this only to over-ride the score, wehn re-scoring.
-    void set_score(score_t sc)
-    {
-        score = sc;
-        update_penalized_score();
-    }
+	// Use this only to over-ride the score, wehn re-scoring.
+	void set_score(score_t sc)
+	{
+		score = sc;
+		update_penalized_score();
+	}
 
-    /// Sign convention: the penalty is positive, it is subtracted from
-    /// the "raw" score to get the penalized score.
-    score_t get_complexity_penalty() const
-    {
-        return complexity_penalty;
-    }
-    void set_complexity_penalty(score_t penalty)
-    {
-        complexity_penalty = penalty;
-        update_penalized_score();
-    }
-    score_t get_uniformity_penalty() const
-    {
-        return uniformity_penalty;
-    }
-    void set_uniformity_penalty(score_t penalty)
-    {
-        uniformity_penalty = penalty;
-        update_penalized_score();
-    }
-    score_t get_penalty() const
-    {
-        return complexity_penalty + uniformity_penalty;
-    }
+	/// Sign convention: the penalty is positive, it is subtracted from
+	/// the "raw" score to get the penalized score.
+	score_t get_complexity_penalty() const
+	{
+		return complexity_penalty;
+	}
+	void set_complexity_penalty(score_t penalty)
+	{
+		complexity_penalty = penalty;
+		update_penalized_score();
+	}
+	score_t get_uniformity_penalty() const
+	{
+		return uniformity_penalty;
+	}
+	void set_uniformity_penalty(score_t penalty)
+	{
+		uniformity_penalty = penalty;
+		update_penalized_score();
+	}
+	score_t get_penalty() const
+	{
+		return complexity_penalty + uniformity_penalty;
+	}
 
-    /// Compare penalized scores.  That is, we compare score-penalty
-    /// on the right to score-penalty on the left. If the 2
-    /// score-penalty qre equal then we compare by complexity
-    /// (decreasing order, as complexity is positive). We do that in
-    /// case no score penalty has been set.
-    ///
-    /// Additionally we assume that nan is always smaller than
-    /// anything (including -inf) except nan
-    bool operator<(const composite_score &r) const;
+	/// Compare penalized scores.  That is, we compare score-penalty
+	/// on the right to score-penalty on the left. If the 2
+	/// score-penalty qre equal then we compare by complexity
+	/// (decreasing order, as complexity is positive). We do that in
+	/// case no score penalty has been set.
+	///
+	/// Additionally we assume that nan is always smaller than
+	/// anything (including -inf) except nan
+	bool operator<(const composite_score &r) const;
 
-    /// used in test cases -- compare equality to 7 decimal places.
-    bool operator==(const composite_score &r) const;
+	/// used in test cases -- compare equality to 7 decimal places.
+	bool operator==(const composite_score &r) const;
 
-    // EXPERIMENTAL: if multiply_diversity is set to true then the
-    // uniformity_penalty is multiplied with the raw score instead
-    // being subtracted. This makes more sense if the uniformity
-    // penalty represent a probability. Hmm. Except that scores
-    // behave kind-of-like the logarithm of a (solomonoff) probability...
-    // so if if the diversity is acting like a probability, we should
-    // probably be taking it's log, and adding that.  Certainly,
-    // that's exatly how we treat the complexity penalty: its the log
-    // of the total number of states the combo tree represents, which
-    // is why we add it ...
-    bool multiply_diversity;
+	// EXPERIMENTAL: if multiply_diversity is set to true then the
+	// uniformity_penalty is multiplied with the raw score instead
+	// being subtracted. This makes more sense if the uniformity
+	// penalty represent a probability. Hmm. Except that scores
+	// behave kind-of-like the logarithm of a (solomonoff) probability...
+	// so if if the diversity is acting like a probability, we should
+	// probably be taking it's log, and adding that.  Certainly,
+	// that's exatly how we treat the complexity penalty: its the log
+	// of the total number of states the combo tree represents, which
+	// is why we add it ...
+	bool multiply_diversity;
 
 protected:
-    score_t score;
-    complexity_t complexity;
-    score_t complexity_penalty;
-    score_t uniformity_penalty;
-    score_t penalized_score;
+	score_t score;
+	complexity_t complexity;
+	score_t complexity_penalty;
+	score_t uniformity_penalty;
+	score_t penalized_score;
 
-    /// Update penalized_score, i.e. substract the complexity and
-    /// uniformity penalty from the raw score.
-    void update_penalized_score()
-    {
-        penalized_score = score - complexity_penalty;
-        if (multiply_diversity)
-            penalized_score *= uniformity_penalty;
-        else
-            penalized_score -= uniformity_penalty;
-    }
+	/// Update penalized_score, i.e. substract the complexity and
+	/// uniformity penalty from the raw score.
+	void update_penalized_score()
+	{
+		penalized_score = score - complexity_penalty;
+		if (multiply_diversity)
+			penalized_score *= uniformity_penalty;
+		else
+			penalized_score -= uniformity_penalty;
+	}
 };
 
 extern const composite_score worst_composite_score;
@@ -223,9 +223,9 @@ extern const composite_score worst_composite_score;
 //
 // XXX wouldn't it be better to store ints here ??
 struct demeID_t : public std::string {
-    demeID_t(unsigned expansion = 0 /* default initial deme */);
-    demeID_t(unsigned expansion, unsigned breadth_first);
-    demeID_t(unsigned expansion, unsigned breadth_first, unsigned ss_deme);
+	demeID_t(unsigned expansion = 0 /* default initial deme */);
+	demeID_t(unsigned expansion, unsigned breadth_first);
+	demeID_t(unsigned expansion, unsigned breadth_first, unsigned ss_deme);
 
 //  Handle as_handle() const{
 //      return createNode(CONCEPT_NODE, *this);
@@ -248,23 +248,23 @@ struct demeID_t : public std::string {
 // TODO this should be a std::valarray not std::vector but I am too
 // lazy to make the switch right now.
 struct behavioral_score : public std::vector<score_t> {
-    behavioral_score() {}
-    behavioral_score(size_t sz) : std::vector<score_t>(sz) {}
-    behavioral_score(size_t sz, score_t val) : std::vector<score_t>(sz, val) {}
-    behavioral_score(std::initializer_list<score_t> il)
-        : std::vector<score_t>(il) {}
+	behavioral_score() {}
+	behavioral_score(size_t sz) : std::vector<score_t>(sz) {}
+	behavioral_score(size_t sz, score_t val) : std::vector<score_t>(sz, val) {}
+	behavioral_score(std::initializer_list<score_t> il)
+		: std::vector<score_t>(il) {}
 
-    std::vector<score_t> operator-=(const std::vector<score_t>& rhs)
-    {
-        size_t sz = rhs.size();
-        OC_ASSERT(size() == sz,
+	std::vector<score_t> operator-=(const std::vector<score_t>& rhs)
+	{
+		size_t sz = rhs.size();
+		OC_ASSERT(size() == sz,
                   "Error: Incompatible behavioral_score sizes, this=%zu rhs=%zu",
                   size(), sz);
-        for (size_t i = 0; i < sz; i++) {
-            (*this)[i] -= rhs[i];
-        }
-        return *this;
-    }
+		for (size_t i = 0; i < sz; i++) {
+			(*this)[i] -= rhs[i];
+		}
+		return *this;
+	}
 
 //  Handle as_handle() const {
 //      HandleSeq scores;
@@ -278,17 +278,17 @@ struct behavioral_score : public std::vector<score_t> {
 };
 
 static inline behavioral_score operator-(const behavioral_score& lhs,
-        const behavioral_score& rhs)
+                                         const behavioral_score& rhs)
 {
-    size_t sz = rhs.size();
-    OC_ASSERT(lhs.size() == sz,
+	size_t sz = rhs.size();
+	OC_ASSERT(lhs.size() == sz,
               "Error: Incompatible behavioral_score sizes, lhs=%zu rhs=%zu",
               lhs.size(), sz);
-    behavioral_score bs;
-    for (size_t i = 0; i < sz; i++) {
-        bs.push_back(lhs[i] - rhs[i]);
-    }
-    return bs;
+	behavioral_score bs;
+	for (size_t i = 0; i < sz; i++) {
+		bs.push_back(lhs[i] - rhs[i]);
+	}
+	return bs;
 }
 
 /// A single combo tree, together with various score metrics for it.
@@ -306,187 +306,187 @@ static inline behavioral_score operator-(const behavioral_score& lhs,
 class scored_combo_tree : public boost::equality_comparable<scored_combo_tree>
 {
 public:
-    scored_combo_tree(combo::combo_tree tr,
+	scored_combo_tree(combo::combo_tree tr,
                       demeID_t id = demeID_t(),
                       composite_score cs = composite_score(),
                       behavioral_score bs = behavioral_score())
         : _tree(tr), _deme_id(id), _cscore(cs), _bscore(bs), _weight(1.0)
-    {}
+	{}
 
 private:
-    combo::combo_tree _tree;
-    demeID_t _deme_id;
-    composite_score _cscore;
-    behavioral_score _bscore;
-    double _weight;
+	combo::combo_tree _tree;
+	demeID_t _deme_id;
+	composite_score _cscore;
+	behavioral_score _bscore;
+	double _weight;
 
 public:
-    const combo::combo_tree& get_tree() const
-    {
-        return _tree;
-    }
-    combo::combo_tree& get_tree()
-    {
-        return _tree;
-    }
+	const combo::combo_tree& get_tree() const
+	{
+		return _tree;
+	}
+	combo::combo_tree& get_tree()
+	{
+		return _tree;
+	}
 
-    const demeID_t get_demeID() const
-    {
-        return _deme_id;
-    }
-    demeID_t get_demeID()
-    {
-        return _deme_id;
-    }
+	const demeID_t get_demeID() const
+	{
+		return _deme_id;
+	}
+	demeID_t get_demeID()
+	{
+		return _deme_id;
+	}
 
-    const behavioral_score& get_bscore() const
-    {
-        return _bscore;
-    }
-    void set_bscore(const behavioral_score& bs)
-    {
-        _bscore = bs;
-    }
-    double get_weight() const
-    {
-        return _weight;
-    }
-    void set_weight(double w)
-    {
-        _weight = w;
-    }
-    const composite_score& get_composite_score() const
-    {
-        return _cscore;
-    }
-    composite_score& get_composite_score()
-    {
-        return _cscore;
-    }
+	const behavioral_score& get_bscore() const
+	{
+		return _bscore;
+	}
+	void set_bscore(const behavioral_score& bs)
+	{
+		_bscore = bs;
+	}
+	double get_weight() const
+	{
+		return _weight;
+	}
+	void set_weight(double w)
+	{
+		_weight = w;
+	}
+	const composite_score& get_composite_score() const
+	{
+		return _cscore;
+	}
+	composite_score& get_composite_score()
+	{
+		return _cscore;
+	}
 
-    /* Utility wrappers */
-    score_t get_score() const
-    {
-        return _cscore.get_score();
-    }
-    complexity_t get_complexity() const
-    {
-        return _cscore.get_complexity();
-    }
-    score_t get_penalized_score() const
-    {
-        return _cscore.get_penalized_score();
-    }
-    score_t get_complexity_penalty() const
-    {
-        return _cscore.get_complexity_penalty();
-    }
-    score_t get_uniformity_penalty() const
-    {
-        return _cscore.get_uniformity_penalty();
-    }
-    score_t get_penalty() const
-    {
-        return _cscore.get_penalty();
-    }
+	/* Utility wrappers */
+	score_t get_score() const
+	{
+		return _cscore.get_score();
+	}
+	complexity_t get_complexity() const
+	{
+		return _cscore.get_complexity();
+	}
+	score_t get_penalized_score() const
+	{
+		return _cscore.get_penalized_score();
+	}
+	score_t get_complexity_penalty() const
+	{
+		return _cscore.get_complexity_penalty();
+	}
+	score_t get_uniformity_penalty() const
+	{
+		return _cscore.get_uniformity_penalty();
+	}
+	score_t get_penalty() const
+	{
+		return _cscore.get_penalty();
+	}
 
-    bool operator==(const scored_combo_tree& r) const;
+	bool operator==(const scored_combo_tree& r) const;
 };
 
 //scored_atomese
 class scored_atomese : public boost::equality_comparable<scored_atomese>
 {
 public:
-    scored_atomese(const Handle &h,
+	scored_atomese(const Handle &h,
                    demeID_t id = demeID_t(),
                    composite_score cs = composite_score(),
                    behavioral_score bs = behavioral_score())
         : _atomese(h), _deme_id(id), _cscore(cs), _bscore(bs), _weight(1.0)
-    {}
+	{}
 
 private:
-    Handle _atomese;
-    demeID_t _deme_id;
-    composite_score _cscore;
-    behavioral_score _bscore;
-    double _weight;
+	Handle _atomese;
+	demeID_t _deme_id;
+	composite_score _cscore;
+	behavioral_score _bscore;
+	double _weight;
 
 public:
-    const Handle& get_handle() const
-    {
-        return _atomese;
-    }
-    Handle& get_handle()
-    {
-        return _atomese;
-    }
+	const Handle& get_handle() const
+	{
+		return _atomese;
+	}
+	Handle& get_handle()
+	{
+		return _atomese;
+	}
 //  Handle as_scored_handle() const{
 //      HandleSeq seq {_atomese, _deme_id.as_handle(), _cscore.as_handle(),
 //                     _bscore.as_handle(), createNode(NUMBER_NODE, std::to_string(_weight))};
 //      return createLink(seq, LIST_LINK);
 //  }
 
-    const demeID_t get_demeID() const
-    {
-        return _deme_id;
-    }
-    demeID_t get_demeID()
-    {
-        return _deme_id;
-    }
+	const demeID_t get_demeID() const
+	{
+		return _deme_id;
+	}
+	demeID_t get_demeID()
+	{
+		return _deme_id;
+	}
 
-    const behavioral_score& get_bscore() const
-    {
-        return _bscore;
-    }
-    void set_bscore(const behavioral_score& bs)
-    {
-        _bscore = bs;
-    }
-    double get_weight() const
-    {
-        return _weight;
-    }
-    void set_weight(double w)
-    {
-        _weight = w;
-    }
-    const composite_score& get_composite_score() const
-    {
-        return _cscore;
-    }
-    composite_score& get_composite_score()
-    {
-        return _cscore;
-    }
+	const behavioral_score& get_bscore() const
+	{
+		return _bscore;
+	}
+	void set_bscore(const behavioral_score& bs)
+	{
+		_bscore = bs;
+	}
+	double get_weight() const
+	{
+		return _weight;
+	}
+	void set_weight(double w)
+	{
+		_weight = w;
+	}
+	const composite_score& get_composite_score() const
+	{
+		return _cscore;
+	}
+	composite_score& get_composite_score()
+	{
+		return _cscore;
+	}
 
-    /* Utility wrappers */
-    score_t get_score() const
-    {
-        return _cscore.get_score();
-    }
-    complexity_t get_complexity() const
-    {
-        return _cscore.get_complexity();
-    }
-    score_t get_penalized_score() const
-    {
-        return _cscore.get_penalized_score();
-    }
-    score_t get_complexity_penalty() const
-    {
-        return _cscore.get_complexity_penalty();
-    }
-    score_t get_uniformity_penalty() const
-    {
-        return _cscore.get_uniformity_penalty();
-    }
-    score_t get_penalty() const
-    {
-        return _cscore.get_penalty();
-    }
+	/* Utility wrappers */
+	score_t get_score() const
+	{
+		return _cscore.get_score();
+	}
+	complexity_t get_complexity() const
+	{
+		return _cscore.get_complexity();
+	}
+	score_t get_penalized_score() const
+	{
+		return _cscore.get_penalized_score();
+	}
+	score_t get_complexity_penalty() const
+	{
+		return _cscore.get_complexity_penalty();
+	}
+	score_t get_uniformity_penalty() const
+	{
+		return _cscore.get_uniformity_penalty();
+	}
+	score_t get_penalty() const
+	{
+		return _cscore.get_penalty();
+	}
 
-    bool operator==(const scored_atomese& r) const;
+	bool operator==(const scored_atomese& r) const;
 };
 
 // =======================================================================
@@ -629,19 +629,19 @@ std::istream& istream_scored_combo_trees(std::istream& in,
 inline std::ostream& operator<<(std::ostream& out,
                                 const moses::scored_combo_tree& sct)
 {
-    return moses::ostream_scored_combo_tree(out, sct);
+	return moses::ostream_scored_combo_tree(out, sct);
 }
 
 inline std::ostream& operator<<(std::ostream& out,
                                 const moses::scored_atomese& sa)
 {
-    return moses::ostream_scored_atomese(out, sa);
+	return moses::ostream_scored_atomese(out, sa);
 }
 
 inline std::ostream& operator<<(std::ostream& out,
                                 const moses::composite_score& ts)
 {
-    return out << "[score="
+	return out << "[score="
            << std::setprecision(moses::io_score_precision)
            << ts.get_score()
            << ", penalized score=" << ts.get_penalized_score()
@@ -654,7 +654,7 @@ inline std::ostream& operator<<(std::ostream& out,
 inline std::ostream& operator<<(std::ostream& out,
                                 const moses::behavioral_score& s)
 {
-    return moses::ostream_behavioral_score(out, s);
+	return moses::ostream_behavioral_score(out, s);
 }
 
 } // ~namespace moses
