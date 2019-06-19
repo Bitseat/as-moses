@@ -31,8 +31,10 @@
 
 #include "metapopulation.h"
 
-namespace opencog {
-namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 using namespace combo;
 
@@ -58,8 +60,7 @@ void metapopulation::trim_down_deme(deme_t& deme) const
     if (_min_pool_size >= deme.size())
         return;
 
-    if (logger().is_debug_enabled())
-    {
+    if (logger().is_debug_enabled()) {
         std::stringstream ss;
         ss << "Trim down deme " << deme.getID()
            << " of size: " << deme.size();
@@ -69,7 +70,7 @@ void metapopulation::trim_down_deme(deme_t& deme) const
     score_t top_sc = deme.begin()->second.get_penalized_score();
     score_t bot_sc = top_sc - useful_score_range();
 
-    for (size_t i = deme.size()-1; 0 < i; --i) {
+    for (size_t i = deme.size() - 1; 0 < i; --i) {
         const composite_score &cscore = deme[i].second;
         score_t score = cscore.get_penalized_score();
         if (score < bot_sc) {
@@ -77,8 +78,7 @@ void metapopulation::trim_down_deme(deme_t& deme) const
         }
     }
 
-    if (logger().is_debug_enabled())
-    {
+    if (logger().is_debug_enabled()) {
         std::stringstream ss;
         ss << "Deme trimmed down, new size: " << deme.size();
         logger().debug(ss.str());
@@ -98,8 +98,7 @@ void metapopulation::deme_to_trees(deme_t& deme,
     std::mutex mtx;
 
     auto select_candidates =
-        [&](const scored_instance<composite_score>& inst)
-    {
+    [&](const scored_instance<composite_score>& inst) {
         const composite_score& inst_csc = inst.second;
         score_t inst_sc = inst_csc.get_score();
         // If score is really bad, don't bother.
@@ -145,7 +144,7 @@ void metapopulation::rescore()
         sct.get_composite_score().set_score(new_score);
     }
 #else
-    auto rescore_sct = [&](scored_combo_tree& sct) {
+    auto rescore_sct = [&](scored_combo_tree & sct) {
         score_t new_score = bscorer.sum_bscore(sct.get_bscore());
         sct.get_composite_score().set_score(new_score);
     }
@@ -158,12 +157,12 @@ void metapopulation::rescore_atomese()
     bscore_base& bscorer = _cscorer.get_bscorer();
 
 #if SERIAL_RESCORING
-        for (scored_atomese& sct : _scored_atomeses) {
-            score_t new_score = bscorer.sum_bscore(sct.get_bscore());
-            sct.get_composite_score().set_score(new_score);
-        }
+    for (scored_atomese& sct : _scored_atomeses) {
+        score_t new_score = bscorer.sum_bscore(sct.get_bscore());
+        sct.get_composite_score().set_score(new_score);
+    }
 #else
-        auto rescore_sct = [&](scored_atomese& sct) {
+    auto rescore_sct = [&](scored_atomese & sct) {
         score_t new_score = bscorer.sum_bscore(sct.get_bscore());
         sct.get_composite_score().set_score(new_score);
     }
@@ -230,8 +229,7 @@ void metapopulation::merge_candidates(scored_atomese_set& candidates)
     // complex...
     if (not _params.discard_dominated) {
         logger().debug("Insert all candidates in the metapopulation");
-        for (const auto& cnd : candidates)
-        {
+        for (const auto& cnd : candidates) {
             scored_atomese *sa = new scored_atomese(cnd);
             _scored_atomeses.insert(sa);
 //            _as.add_atom(sa->as_scored_handle());
@@ -306,7 +304,7 @@ bool metapopulation::merge_demes(std::vector<std::vector<deme_t>>& all_demes,
     // Remove candidate trees that are already in the metapop.
     scored_combo_tree_set candidates = get_new_candidates(pot_candidates);
     logger().debug("Selected %u candidates (%u were already in the metapopulation)",
-                   candidates.size(), pot_candidates.size()-candidates.size());
+                   candidates.size(), pot_candidates.size() - candidates.size());
 
     // Behavioral scores are needed only if domination-based
     // merging is asked for, or if the uniformity penalty is in use.
@@ -317,8 +315,7 @@ bool metapopulation::merge_demes(std::vector<std::vector<deme_t>>& all_demes,
     if (diversity_enabled()
         or _params.do_boosting
         or _params.discard_dominated
-        or _params.keep_bscore)
-    {
+        or _params.keep_bscore) {
         logger().debug("Compute behavioral score of %d selected candidates",
                        candidates.size());
 
@@ -330,8 +327,7 @@ bool metapopulation::merge_demes(std::vector<std::vector<deme_t>>& all_demes,
 #ifdef PARALLEL_SCORE
         std::mutex insert_mutex;
         scored_combo_tree_set new_pot;
-        auto compute_bscore = [&, this](const scored_combo_tree& cand)
-        {
+        auto compute_bscore = [&, this](const scored_combo_tree & cand) {
             behavioral_score bs(this->_cscorer.get_bscore(cand.get_tree()));
             scored_combo_tree sct(cand.get_tree(),
                                   cand.get_demeID(),
@@ -344,8 +340,7 @@ bool metapopulation::merge_demes(std::vector<std::vector<deme_t>>& all_demes,
         candidates = new_pot;
 #else
         scored_combo_tree_set new_pot;
-        for (const scored_combo_tree& cand : pot_candidates)
-        {
+        for (const scored_combo_tree& cand : pot_candidates) {
             behavioral_score bs(_cscorer.get_bscore(cand.get_tree()));
             scored_combo_tree sct(cand.get_tree(),
                                   cand.get_demeID(),
@@ -365,7 +360,7 @@ bool metapopulation::merge_demes(std::vector<std::vector<deme_t>>& all_demes,
         if (logger().is_fine_enabled()) {
             std::stringstream ss;
             ss << "Candidates with their bscores before"
-                " removing the dominated candidates" << std::endl;
+               " removing the dominated candidates" << std::endl;
             for (const auto& cnd : candidates)
                 ss << cnd;
             logger().fine(ss.str());
@@ -379,7 +374,7 @@ bool metapopulation::merge_demes(std::vector<std::vector<deme_t>>& all_demes,
         if (logger().is_fine_enabled()) {
             std::stringstream ss;
             ss << "Candidates with their bscores after"
-                " removing the dominated candidates" << std::endl;
+               " removing the dominated candidates" << std::endl;
             for (const auto& cnd : candidates)
                 ss << cnd;
             logger().fine(ss.str());
@@ -414,7 +409,7 @@ bool metapopulation::merge_demes(std::vector<std::vector<deme_t>>& all_demes,
 }
 
 bool metapopulation::merge_demes_atomese(std::vector<std::vector<deme_t>>& all_demes,
-                                         const boost::ptr_vector<representation>& reps)
+        const boost::ptr_vector<representation>& reps)
 {
     OC_ASSERT(false, "Not implemented yet");
 }
@@ -482,14 +477,13 @@ void metapopulation::resize_metapop()
     _merge_count++;
     double cap = _params.cap_coef;
     cap *= _merge_count + 250.0;
-    cap *= 1 + 2.0*exp(- double(_merge_count) / 500.0);
+    cap *= 1 + 2.0 * exp(- double(_merge_count) / 500.0);
     size_t popsz_cap = cap;
     size_t popsz = size();
-    while (popsz_cap < popsz)
-    {
+    while (popsz_cap < popsz) {
         // Leave the first 50 alone.
         static const int offset = 50;
-        int which = offset + randGen().randint(popsz-offset);
+        int which = offset + randGen().randint(popsz - offset);
         // using std is necessary to break the ambiguity between
         // boost::next and std::next. Weirdly enough this appears
         // only 32bit arch
@@ -524,7 +518,7 @@ void metapopulation::resize_metapop_atomese()
 
     unsigned old_size = size();
     logger().debug("Resize the metapopulation (current size=%u), "
-                           "removing worst candidates",
+                   "removing worst candidates",
                    old_size);
 
     // pointers to deallocate
@@ -578,14 +572,13 @@ void metapopulation::resize_metapop_atomese()
     _merge_count++;
     double cap = _params.cap_coef;
     cap *= _merge_count + 250.0;
-    cap *= 1 + 2.0*exp(- double(_merge_count) / 500.0);
+    cap *= 1 + 2.0 * exp(- double(_merge_count) / 500.0);
     size_t popsz_cap = cap;
     size_t popsz = size();
-    while (popsz_cap < popsz)
-    {
+    while (popsz_cap < popsz) {
         // Leave the first 50 alone.
         static const int offset = 50;
-        int which = offset + randGen().randint(popsz-offset);
+        int which = offset + randGen().randint(popsz - offset);
         // using std is necessary to break the ambiguity between
         // boost::next and std::next. Weirdly enough this appears
         // only 32bit arch
@@ -633,11 +626,13 @@ scored_combo_tree_set metapopulation::get_new_candidates(const scored_combo_tree
 
     scored_combo_tree_ptr_set::const_iterator cbeg = _scored_trees.begin();
     scored_combo_tree_ptr_set::const_iterator cend = _scored_trees.end();
-    auto insert_new_candidate = [&](const scored_combo_tree& cnd) {
+    auto insert_new_candidate = [&](const scored_combo_tree & cnd) {
         const combo_tree& tr = cnd.get_tree();
         scored_combo_tree_ptr_set::const_iterator fcnd =
             std::find_if(cbeg, cend,
-                [&](const scored_combo_tree& v) { return tr == v.get_tree(); });
+        [&](const scored_combo_tree & v) {
+            return tr == v.get_tree();
+        });
         if (fcnd == cend) {
             std::lock_guard<std::mutex> lock(insert_cnd_mutex);
             res.insert(cnd);
@@ -652,8 +647,9 @@ scored_combo_tree_set metapopulation::get_new_candidates(const scored_combo_tree
         const combo_tree& tr = cnd.get_tree();
         scored_combo_tree_ptr_set::const_iterator fcnd =
             OMP_ALGO::find_if(_scored_trees.begin(), _scored_trees.end(),
-                              [&](const scored_combo_tree& v) {
-                    return tr == v.get_tree(); });
+        [&](const scored_combo_tree & v) {
+            return tr == v.get_tree();
+        });
         if (fcnd == _scored_trees.end())
             res.insert(cnd);
     }
@@ -675,11 +671,13 @@ scored_atomese_set metapopulation::get_new_candidates(const scored_atomese_set& 
 
     scored_atomese_ptr_set::const_iterator cbeg = _scored_atomeses.begin();
     scored_atomese_ptr_set::const_iterator cend = _scored_atomeses.end();
-    auto insert_new_candidate = [&](const scored_atomese& cnd) {
+    auto insert_new_candidate = [&](const scored_atomese & cnd) {
         const Handle& h = cnd.get_handle();
         scored_atomese_ptr_set::const_iterator fcnd =
-                std::find_if(cbeg, cend,
-                             [&](const scored_atomese& v) { return h == v.get_handle(); });
+            std::find_if(cbeg, cend,
+        [&](const scored_atomese & v) {
+            return h == v.get_handle();
+        });
         if (fcnd == cend) {
             std::lock_guard<std::mutex> lock(insert_cnd_mutex);
             res.insert(cnd);
@@ -694,8 +692,9 @@ scored_atomese_set metapopulation::get_new_candidates(const scored_atomese_set& 
         const Handle& h = cnd.get_handle();
         scored_atomese_ptr_set::const_iterator fcnd =
             OMP_ALGO::find_if(_scored_atomeses.begin(), _scored_atomeses.end(),
-                              [&](const scored_atomese& v) {
-                    return h == v.get_handle(); });
+        [&](const scored_atomese & v) {
+            return h == v.get_handle();
+        });
         if (fcnd == _scored_atomeses.end())
             res.insert(cnd);
     }
@@ -703,7 +702,8 @@ scored_atomese_set metapopulation::get_new_candidates(const scored_atomese_set& 
 #endif
 }
 
-void metapopulation::sort_demes(std::vector<std::vector<deme_t>>& all_demes) {
+void metapopulation::sort_demes(std::vector<std::vector<deme_t>>& all_demes)
+{
     logger().debug("Sort the deme(s)");
     for (auto& ss_demes : all_demes)
         for (auto& deme : ss_demes)
@@ -733,8 +733,7 @@ void metapopulation::keep_top_unique_candidates(
                 top_cnd = std::min(top_cnd,
                                    _filter_params.n_top_candidates);
 
-            if (logger().is_debug_enabled())
-            {
+            if (logger().is_debug_enabled()) {
                 std::stringstream ss;
                 ss << "Keep " << top_cnd
                    << " top unique candidates from deme " << deme.getID()
@@ -749,10 +748,10 @@ void metapopulation::keep_top_unique_candidates(
             for (auto it = deme.begin(), prev_it = it++;
                  it != deme.begin() + top_cnd;) {
                 score_t sc = (select_tag()(*it)).get_penalized_score(),
-                    prev_sc = (select_tag()(*prev_it)).get_penalized_score();
+                        prev_sc = (select_tag()(*prev_it)).get_penalized_score();
                 if (is_approx_eq(prev_sc, sc, EPSILON)) { // they might be identical
                     combo_tree tr = rep.get_candidate(*it, true),
-                        prev_tr = rep.get_candidate(*prev_it, true);
+                               prev_tr = rep.get_candidate(*prev_it, true);
                     if (prev_tr == tr) { // they actually are identical
                         it = deme.erase(it);
                         top_cnd = std::min(top_cnd, (unsigned)deme.size());
@@ -767,8 +766,7 @@ void metapopulation::keep_top_unique_candidates(
             // Remove the bottom
             deme.erase(deme.begin() + top_cnd, deme.end());
 
-            if (logger().is_debug_enabled())
-            {
+            if (logger().is_debug_enabled()) {
                 std::stringstream ss;
                 ss << "Kept unique top candidates, new size: " << deme.size();
                 logger().debug(ss.str());
@@ -796,15 +794,12 @@ void metapopulation::update_best_candidates(const scored_combo_tree_set& candida
     score_t best_sc = _best_cscore.get_score();
     complexity_t best_cpx = _best_cscore.get_complexity();
 
-    for (const scored_combo_tree& cnd : candidates)
-    {
+    for (const scored_combo_tree& cnd : candidates) {
         const composite_score& csc = cnd.get_composite_score();
         score_t sc = csc.get_score();
         complexity_t cpx = csc.get_complexity();
-        if ((sc > best_sc) || ((sc == best_sc) && (cpx <= best_cpx)))
-        {
-            if ((sc > best_sc) || ((sc == best_sc) && (cpx < best_cpx)))
-            {
+        if ((sc > best_sc) || ((sc == best_sc) && (cpx <= best_cpx))) {
+            if ((sc > best_sc) || ((sc == best_sc) && (cpx < best_cpx))) {
                 _best_cscore = csc;
                 best_sc = _best_cscore.get_score();
                 best_cpx = _best_cscore.get_complexity();
@@ -834,15 +829,12 @@ void metapopulation::update_best_candidates(const scored_atomese_set& candidates
     score_t best_sc = _best_cscore.get_score();
     complexity_t best_cpx = _best_cscore.get_complexity();
 
-    for (const scored_atomese& cnd : candidates)
-    {
+    for (const scored_atomese& cnd : candidates) {
         const composite_score& csc = cnd.get_composite_score();
         score_t sc = csc.get_score();
         complexity_t cpx = csc.get_complexity();
-        if ((sc > best_sc) || ((sc == best_sc) && (cpx <= best_cpx)))
-        {
-            if ((sc > best_sc) || ((sc == best_sc) && (cpx < best_cpx)))
-            {
+        if ((sc > best_sc) || ((sc == best_sc) && (cpx <= best_cpx))) {
+            if ((sc > best_sc) || ((sc == best_sc) && (cpx < best_cpx))) {
                 _best_cscore = csc;
                 best_sc = _best_cscore.get_score();
                 best_cpx = _best_cscore.get_complexity();
@@ -867,16 +859,16 @@ void metapopulation::log_best_candidates() const
     else {
         if (not _params.do_boosting) {
             logger().info()
-               << "The following candidate(s) have the best score "
-               << best_composite_score();
+                    << "The following candidate(s) have the best score "
+                    << best_composite_score();
             for (const auto& cand : best_candidates()) {
                 logger().info() << cand.get_score() << " " << cand.get_tree();
             }
         } else {
             logger().info()
-               << "Ensemble has " << _ensemble.get_ensemble().size()
-               << " members, and a score of "
-               << best_composite_score();
+                    << "Ensemble has " << _ensemble.get_ensemble().size()
+                    << " members, and a score of "
+                    << best_composite_score();
             if (logger().is_debug_enabled()) {
                 logger().debug() << "The ensemble is " << std::endl;
                 for (const auto& cand : _ensemble.get_ensemble()) {

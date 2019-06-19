@@ -29,15 +29,17 @@
 
 #include "metapopulation.h"
 
-namespace opencog {
-namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 using namespace combo;
 
 metapopulation::metapopulation(const combo_tree_seq& bases,
-               behave_cscore& sc,
-               const metapop_parameters& pa,
-               const subsample_deme_filter_parameters& subp) :
+                               behave_cscore& sc,
+                               const metapop_parameters& pa,
+                               const subsample_deme_filter_parameters& subp) :
     _cached_dst(pa.diversity),
     _params(pa),
     _filter_params(subp),
@@ -50,9 +52,9 @@ metapopulation::metapopulation(const combo_tree_seq& bases,
 }
 
 metapopulation::metapopulation(const HandleSeq& bases,
-               behave_cscore& sc,
-               const metapop_parameters& pa,
-               const subsample_deme_filter_parameters& subp) :
+                               behave_cscore& sc,
+                               const metapop_parameters& pa,
+                               const subsample_deme_filter_parameters& subp) :
     _cached_dst(pa.diversity),
     _params(pa),
     _filter_params(subp),
@@ -65,9 +67,9 @@ metapopulation::metapopulation(const HandleSeq& bases,
 }
 
 metapopulation::metapopulation(const combo_tree& base,
-               behave_cscore& sc,
-               const metapop_parameters& pa,
-               const subsample_deme_filter_parameters& subp) :
+                               behave_cscore& sc,
+                               const metapop_parameters& pa,
+                               const subsample_deme_filter_parameters& subp) :
     _cached_dst(pa.diversity),
     _params(pa),
     _filter_params(subp),
@@ -81,9 +83,9 @@ metapopulation::metapopulation(const combo_tree& base,
 }
 
 metapopulation::metapopulation(const Handle& base,
-               behave_cscore& sc,
-               const metapop_parameters& pa,
-               const subsample_deme_filter_parameters& subp) :
+                               behave_cscore& sc,
+                               const metapop_parameters& pa,
+                               const subsample_deme_filter_parameters& subp) :
     _cached_dst(pa.diversity),
     _params(pa),
     _filter_params(subp),
@@ -157,7 +159,7 @@ void metapopulation::log_selected_exemplar(scored_combo_tree_ptr_set::const_iter
     } else {
         const auto& xmplr = *exemplar_it;
         unsigned pos = std::distance(_scored_trees.cbegin(), exemplar_it) + 1,
-            nth_vst = _visited_exemplars[xmplr];
+                 nth_vst = _visited_exemplars[xmplr];
 
         logger().debug() << "Selected the " << pos
                          << "th exemplar, from deme " << xmplr.get_demeID()
@@ -224,13 +226,12 @@ scored_combo_tree_ptr_set::const_iterator metapopulation::select_exemplar()
         // Skip exemplars that have been visited enough
         if (std::isfinite(sc) and
             ((_params.revisit < 0) or
-            (_params.revisit + 1 > (int)_visited_exemplars[bsct])))
-        {
+             (_params.revisit + 1 > (int)_visited_exemplars[bsct]))) {
             probs.push_back(sc);
             found_exemplar = true;
             if (highest_score < sc) highest_score = sc;
         } else // If the tree is visited too often, then put a
-               // nan score so we know it must be ignored
+            // nan score so we know it must be ignored
             probs.push_back(NAN);
     }
 
@@ -259,8 +260,7 @@ scored_combo_tree_ptr_set::const_iterator metapopulation::select_exemplar()
     }
 
     // log the distribution probs
-    if (logger().is_fine_enabled())
-    {
+    if (logger().is_fine_enabled()) {
         std::stringstream ss;
         ss << "Non-normalized probability distribution of candidate selection: ";
         ostream_container(ss, probs);
@@ -270,8 +270,8 @@ scored_combo_tree_ptr_set::const_iterator metapopulation::select_exemplar()
     OC_ASSERT(sum > 0.0f, "There is an internal bug, please fix it");
 
     size_t fwd = std::distance(probs.begin(), roulette_select(probs.begin(),
-                                                         probs.end(),
-                                                         sum, randGen()));
+                               probs.end(),
+                               sum, randGen()));
     // cout << "select_exemplar(): sum=" << sum << " fwd =" << fwd
     // << " size=" << probs.size() << " frac=" << fwd/((float)probs.size()) << endl;
     scored_combo_tree_ptr_set::const_iterator selex = std::next(_scored_trees.begin(), fwd);

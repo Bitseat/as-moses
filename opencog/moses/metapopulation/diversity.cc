@@ -35,8 +35,10 @@
 
 #include "metapopulation.h"
 
-namespace opencog {
-namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 using namespace std;
 using namespace combo;
@@ -73,12 +75,12 @@ void metapopulation::set_diversity()
 
     // Update the uniformity penalty of the candidate according to its
     // diversity distance to the pool
-    auto update_uniformity_penalty = [&](bsct_dp_pair& v) {
+    auto update_uniformity_penalty = [&](bsct_dp_pair & v) {
 
         if (!pool.empty()) { // only do something if the pool is
-                             // not empty (WARNING: this assumes
-                             // that all uniformity penalties are
-                             // initially zero)
+            // not empty (WARNING: this assumes
+            // that all uniformity penalties are
+            // initially zero)
 
             scored_combo_tree& bsct = *v.first;
             OC_ASSERT(bsct.get_bscore().size(),
@@ -94,7 +96,7 @@ void metapopulation::set_diversity()
                       "If that is the case you might want to switch to the angular "
                       "distance.");
             dp_t last_dp = _params.diversity.dst2dp(last_dst),
-            last_ddp = dp_max ? last_dp : pow(last_dp, _params.diversity.exponent);
+                 last_ddp = dp_max ? last_dp : pow(last_dp, _params.diversity.exponent);
 
             // // debug
             // ++dp_count;
@@ -138,7 +140,7 @@ void metapopulation::set_diversity()
         // Define less function to compare bsct_dp_pair; comparison is
         // based on the composite score ...
         sct_score_greater bsct_gt;
-        auto gt = [&](const bsct_dp_pair& l, const bsct_dp_pair& r) {
+        auto gt = [&](const bsct_dp_pair & l, const bsct_dp_pair & r) {
             return bsct_gt(*l.first, *r.first);
         };
         // note although we do use min_element it returns the
@@ -207,7 +209,7 @@ void metapopulation::set_diversity_atomese()
 
     // Update the uniformity penalty of the candidate according to its
     // diversity distance to the pool
-    auto update_uniformity_penalty = [&](bsct_dp_pair& v) {
+    auto update_uniformity_penalty = [&](bsct_dp_pair & v) {
 
         if (!pool.empty()) { // only do something if the pool is
             // not empty (WARNING: this assumes
@@ -216,19 +218,19 @@ void metapopulation::set_diversity_atomese()
 
             scored_atomese& bsct = *v.first;
             OC_ASSERT(bsct.get_bscore().size(),
-                          "Behavioral score is needed for diversity!");
+                      "Behavioral score is needed for diversity!");
 
             // compute uniformity penalty between bs and the last
             // element of the pool
             dp_t last_dst = this->_cached_dst(&bsct, last_ptr);
             OC_ASSERT(last_dst >= 0.0, "The distance cannot be negative."
-                    "There could be a bug or you are not using a true distance. "
-                    "For instance the Tanimoto distance may be negative "
-                    "when some of its components are negative. "
-                    "If that is the case you might want to switch to the angular "
-                    "distance.");
+                      "There could be a bug or you are not using a true distance. "
+                      "For instance the Tanimoto distance may be negative "
+                      "when some of its components are negative. "
+                      "If that is the case you might want to switch to the angular "
+                      "distance.");
             dp_t last_dp = _params.diversity.dst2dp(last_dst),
-                        last_ddp = dp_max ? last_dp : pow(last_dp, _params.diversity.exponent);
+                 last_ddp = dp_max ? last_dp : pow(last_dp, _params.diversity.exponent);
 
             // // debug
             // ++dp_count;
@@ -249,15 +251,15 @@ void metapopulation::set_diversity_atomese()
             // update v.first
             if (_params.diversity.dst2dp_type == _params.diversity.pthpower)
                 bsct.get_composite_score().multiply_diversity = true;
-                bsct.get_composite_score().set_uniformity_penalty(adp);
+            bsct.get_composite_score().set_uniformity_penalty(adp);
 
             if (logger().is_fine_enabled()) {
                 stringstream ss;
                 ss << "Diversity for candidate: " << bsct.get_handle()
-                       << ", last_dst = " << last_dst
-                       << ", last_dp = " << last_dp
-                       << ", last_ddp = " << last_ddp
-                       << ", adp = " << adp;
+                   << ", last_dst = " << last_dst
+                   << ", last_dp = " << last_dp
+                   << ", last_ddp = " << last_ddp
+                   << ", adp = " << adp;
                 logger().fine(ss.str());
             }
         }
@@ -272,7 +274,7 @@ void metapopulation::set_diversity_atomese()
         // Define less function to compare bsct_dp_pair; comparison is
         // based on the composite score ...
         sa_score_greater bsa_gt;
-        auto gt = [&](const bsct_dp_pair& l, const bsct_dp_pair& r) {
+        auto gt = [&](const bsct_dp_pair & l, const bsct_dp_pair & r) {
             return bsa_gt(*l.first, *r.first);
         };
         // note although we do use min_element it returns the
@@ -321,16 +323,16 @@ metapopulation::gather_diversity_stats(int n)
     else {
         namespace ba = boost::accumulators;
         typedef ba::accumulator_set<double,
-                                 ba::stats<ba::tag::count,
-                                           ba::tag::mean,
-                                           ba::tag::variance,
-                                           ba::tag::min,
-                                           ba::tag::max>> accumulator_t;
+                ba::stats<ba::tag::count,
+                ba::tag::mean,
+                ba::tag::variance,
+                ba::tag::min,
+                ba::tag::max>> accumulator_t;
 
         // compute the statistics
         accumulator_t acc;
         auto from_i = _scored_trees.cbegin(),
-            to = std::next(_scored_trees.cbegin(), std::min(n, (int)size()));
+             to = std::next(_scored_trees.cbegin(), std::min(n, (int)size()));
         for (; from_i != to; ++from_i) {
             for (auto from_j = _scored_trees.cbegin(); from_j != from_i; ++from_j) {
 #ifdef ENABLE_DST_CACHE
@@ -366,23 +368,23 @@ metapopulation::gather_diversity_stats_atomese(int n)
         namespace ba = boost::accumulators;
         typedef ba::accumulator_set<double,
                 ba::stats<ba::tag::count,
-                        ba::tag::mean,
-                        ba::tag::variance,
-                        ba::tag::min,
-                        ba::tag::max>> accumulator_t;
+                ba::tag::mean,
+                ba::tag::variance,
+                ba::tag::min,
+                ba::tag::max>> accumulator_t;
 
         // compute the statistics
         accumulator_t acc;
         auto from_i = _scored_atomeses.cbegin(),
-                to = std::next(_scored_atomeses.cbegin(), std::min(n, (int)size()));
+             to = std::next(_scored_atomeses.cbegin(), std::min(n, (int)size()));
         for (; from_i != to; ++from_i) {
             for (auto from_j = _scored_atomeses.cbegin(); from_j != from_i; ++from_j) {
 #ifdef ENABLE_DST_CACHE
                 cached_dst::ptr_pair cts = {&*from_j, &*from_i};
-            auto it = _cached_dst.cache.find(cts);
-            OC_ASSERT(it != _cached_dst.cache.cend(),
-                      "Candidate isn't in the cache that must be a bug");
-            acc(it->second);
+                auto it = _cached_dst.cache.find(cts);
+                OC_ASSERT(it != _cached_dst.cache.cend(),
+                          "Candidate isn't in the cache that must be a bug");
+                acc(it->second);
 #else
                 acc(_cached_dst(&*from_j, &*from_i));
 #endif
@@ -438,7 +440,7 @@ metapopulation::cached_dst::operator()(const scored_atomese* cl,
                                        const scored_atomese* cr)
 {
 #ifdef ENABLE_DST_CACHE
-        ptr_pair cts = {cl, cr};
+    ptr_pair cts = {cl, cr};
     // hit
     {
         shared_lock lock(mutex);
@@ -461,7 +463,7 @@ metapopulation::cached_dst::operator()(const scored_atomese* cl,
         return cache[cts] = dst;
     }
 #else
-        return _dparams.dst(cl->get_bscore(), cr->get_bscore());
+    return _dparams.dst(cl->get_bscore(), cr->get_bscore());
 #endif
 }
 
@@ -484,10 +486,10 @@ void metapopulation::cached_dst::erase_ptr_seq_atomese(std::vector<scored_atomes
 {
 #ifdef ENABLE_DST_CACHE
     for (Cache::iterator it = cache.begin(); it != cache.end();) {
-       if (!is_disjoint(ptr_seq, it->first))
-           it = cache.erase(it);
-       else
-           ++it;
+        if (!is_disjoint(ptr_seq, it->first))
+            it = cache.erase(it);
+        else
+            ++it;
     }
 #endif
 }
@@ -501,11 +503,11 @@ metapopulation::cached_dst::gather_stats() const
 {
     namespace ba = boost::accumulators;
     typedef ba::accumulator_set<double,
-                                ba::stats<ba::tag::count,
-                                          ba::tag::mean,
-                                          ba::tag::variance,
-                                          ba::tag::min,
-                                          ba::tag::max>> accumulator_t;
+            ba::stats<ba::tag::count,
+            ba::tag::mean,
+            ba::tag::variance,
+            ba::tag::min,
+            ba::tag::max>> accumulator_t;
 
     // compute the statistics
     accumulator_t acc;

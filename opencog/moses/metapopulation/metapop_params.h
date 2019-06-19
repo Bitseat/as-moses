@@ -27,10 +27,12 @@
 #include "ensemble_params.h"
 #include "../moses/types.h"
 
-namespace opencog { namespace moses {
-
-struct diversity_parameters
+namespace opencog
 {
+namespace moses
+{
+
+struct diversity_parameters {
     typedef score_t dp_t;
 
     diversity_parameters();
@@ -105,8 +107,7 @@ struct diversity_parameters
 /**
  * Parameters about subsample deme filter
  */
-struct subsample_deme_filter_parameters
-{
+struct subsample_deme_filter_parameters {
     subsample_deme_filter_parameters(unsigned _n_subsample_demes = 0,
                                      unsigned _n_top_candidates = 1) :
         by_time(true),
@@ -139,8 +140,8 @@ struct subsample_deme_filter_parameters
 
     // Filter mean, geometric mean and max tanimoto distance thresholds.
     float tanimoto_mean_threshold,
-        tanimoto_geo_mean_threshold,
-        tanimoto_max_threshold;
+          tanimoto_geo_mean_threshold,
+          tanimoto_max_threshold;
 
     // Instead of filtering accoring to threshold select the breadth first demes
     unsigned n_best_bfdemes;
@@ -148,8 +149,8 @@ struct subsample_deme_filter_parameters
     // Tanimoto mean, geometric mean and max weights used to calculate
     // the aggregate agreement distance for n_best_bfdemes
     float tanimoto_mean_weight,
-        tanimoto_geo_mean_weight,
-        tanimoto_max_weight;
+          tanimoto_geo_mean_weight,
+          tanimoto_max_weight;
 
     unsigned n_subsample_fitnesses;
     float low_dev_pressure;
@@ -158,8 +159,7 @@ struct subsample_deme_filter_parameters
 /**
  * parameters about metapopulation management
  */
-struct metapop_parameters
-{
+struct metapop_parameters {
     metapop_parameters(int _max_candidates_per_deme = -1,
                        int _revisit = 0,
                        score_t _complexity_temperature = 6.0f,
@@ -176,7 +176,7 @@ struct metapop_parameters
         diversity(_diversity),
         merge_callback(NULL),
         callback_user_data(NULL)
-        {}
+    {}
 
     // The max number of candidates considered to be added to the
     // metapopulation, if negative then all candidates are considered.

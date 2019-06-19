@@ -36,8 +36,10 @@
 
 #include "metapopulation.h"
 
-namespace opencog {
-namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 void metapopulation::recompute_scores_over_whole_dataset(
     std::vector<std::vector<deme_t>>& all_demes,
@@ -102,8 +104,8 @@ std::vector<bool> metapopulation::ss_filter(
                 ss_tanimoto_stats(reps[i], all_demes[i], acc);
 
                 float tanimoto_mean = boost::accumulators::mean(acc),
-                    tanimoto_geo_mean = boost::accumulators::geometric_mean_mirror(acc),
-                    tanimoto_max = boost::accumulators::max(acc);
+                      tanimoto_geo_mean = boost::accumulators::geometric_mean_mirror(acc),
+                      tanimoto_max = boost::accumulators::max(acc);
 
                 logger().debug() << "Tanimoto mean = " << tanimoto_mean
                                  << ", Tanimoto geometric mean = " << tanimoto_geo_mean
@@ -111,8 +113,8 @@ std::vector<bool> metapopulation::ss_filter(
 
                 // Aggregate agreement distance
                 float ag_dst = _filter_params.tanimoto_mean_weight * tanimoto_mean
-                    + _filter_params.tanimoto_geo_mean_weight * tanimoto_geo_mean
-                    + _filter_params.tanimoto_max_weight * tanimoto_max;
+                               + _filter_params.tanimoto_geo_mean_weight * tanimoto_geo_mean
+                               + _filter_params.tanimoto_max_weight * tanimoto_max;
 
                 ag_dsts[i] = ag_dst;
 
@@ -124,7 +126,8 @@ std::vector<bool> metapopulation::ss_filter(
             auto ir = boost::irange(0U, (unsigned)ag_dsts.size());
             std::vector<unsigned> worst_idxs(ir.begin(), ir.end());
             boost::sort(worst_idxs, [&ag_dsts](unsigned i1, unsigned i2) {
-                    return ag_dsts[i1] < ag_dsts[i2]; });
+                return ag_dsts[i1] < ag_dsts[i2];
+            });
             worst_idxs.erase(worst_idxs.begin(), worst_idxs.begin() + n_best_bfdemes);
 
             // Set to false the non selected BF demes
@@ -158,24 +161,24 @@ std::vector<bool> metapopulation::ss_filter(
 
 
 bool metapopulation::ss_score_dev_filter(const representation& rep,
-                                         const std::vector<deme_t>& ss_demes) const
+        const std::vector<deme_t>& ss_demes) const
 {
     logger().fine() << "Enter ss_score_dev_filter";
 
     using namespace boost::accumulators;
     typedef accumulator_set<float,
-                            stats<boost::accumulators::tag::count,
-                                  boost::accumulators::tag::mean,
-                                  boost::accumulators::tag::variance>> stat_acc_t;
+            stats<boost::accumulators::tag::count,
+            boost::accumulators::tag::mean,
+            boost::accumulators::tag::variance>> stat_acc_t;
 
     // We sample at most n_top_candidates tuples, because since we are
     // gonna use sampling without replacement for each deme, we can't
     // consider more than the top candidates set.
     unsigned n_top_candidates = _filter_params.n_top_candidates,
-        n_tuples = _filter_params.n_tuples,
-        base = n_top_candidates,
-        n_possible_tuples = (unsigned)pow(base, ss_demes.size()),
-        sample_tuples = std::min(n_possible_tuples, n_tuples);
+             n_tuples = _filter_params.n_tuples,
+             base = n_top_candidates,
+             n_possible_tuples = (unsigned)pow(base, ss_demes.size()),
+             sample_tuples = std::min(n_possible_tuples, n_tuples);
 
     // Define a selector for all possible tuples
     lazy_random_selector selector(n_possible_tuples);
@@ -217,8 +220,7 @@ bool metapopulation::ss_score_dev_filter(const representation& rep,
     float mean_std = boost::accumulators::mean(mean_std_acc);
     bool pass = mean_std < _filter_params.std_dev_threshold;
 
-    if (logger().is_debug_enabled())
-    {
+    if (logger().is_debug_enabled()) {
         std::stringstream ss;
         ss << "SS Filter: mean score standard deviation = " << mean_std
            << " over demes";
@@ -239,7 +241,7 @@ bool metapopulation::ss_score_dev_filter(const representation& rep,
 }
 
 float metapopulation::ss_average_agreement(const representation& rep,
-                                           std::vector<deme_t>& ss_demes)
+        std::vector<deme_t>& ss_demes)
 {
     logger().fine() << "Enter average_agreement";
 
@@ -247,11 +249,11 @@ float metapopulation::ss_average_agreement(const representation& rep,
     // gonna use sampling without replacement for each deme, we can't
     // consider more than the top candidates set.
     unsigned n_top_candidates = _filter_params.n_top_candidates,
-        n_tuples = _filter_params.n_tuples,
-        base = n_top_candidates,
-        exponent = ss_demes.size(),
-        n_possible_tuples = (unsigned)pow(base, exponent),
-        sample_tuples = std::min(n_possible_tuples, n_tuples);
+             n_tuples = _filter_params.n_tuples,
+             base = n_top_candidates,
+             exponent = ss_demes.size(),
+             n_possible_tuples = (unsigned)pow(base, exponent),
+             sample_tuples = std::min(n_possible_tuples, n_tuples);
 
     // Define a selector for all possible tuples
     lazy_random_selector selector(n_possible_tuples);
@@ -302,7 +304,7 @@ float metapopulation::ss_average_agreement(const representation& rep,
                 else
                     agreement--;
             }
-            float normalized_agreement = agreement/(float)exponent;
+            float normalized_agreement = agreement / (float)exponent;
             total_agreement += abs(normalized_agreement) * orow.total_count();
 
             // if (logger().isFineEnabled())
@@ -372,7 +374,7 @@ void metapopulation::ss_tanimoto_stats(const combo_tree_seq& trs,
     for (unsigned i = 0; i < trs.size(); i++)
         for (unsigned j = 0; j < i; j++)
             acc(tanimoto_distance<std::vector<float>, float>(weighted_activations[i],
-                                                        weighted_activations[j]));
+                    weighted_activations[j]));
 }
 
 void metapopulation::ss_tanimoto_stats(const representation& rep,
@@ -383,11 +385,11 @@ void metapopulation::ss_tanimoto_stats(const representation& rep,
     // gonna use sampling without replacement for each deme, we can't
     // consider more than the top candidates set.
     unsigned n_top_candidates = _filter_params.n_top_candidates,
-        n_tuples = _filter_params.n_tuples,
-        base = n_top_candidates,
-        exponent = ss_demes.size(),
-        n_possible_tuples = (unsigned)pow(base, exponent),
-        sample_tuples = std::min(n_possible_tuples, n_tuples);
+             n_tuples = _filter_params.n_tuples,
+             base = n_top_candidates,
+             exponent = ss_demes.size(),
+             n_possible_tuples = (unsigned)pow(base, exponent),
+             sample_tuples = std::min(n_possible_tuples, n_tuples);
 
     // Define a selector for all possible tuples
     lazy_random_selector selector(n_possible_tuples);
@@ -438,16 +440,15 @@ bool metapopulation::ss_tanimoto_filter(const representation& rep,
 
     // Determine if breadth first deme has passed the tanimoto filter
     float tanimoto_mean = boost::accumulators::mean(acc),
-        tanimoto_geo_mean = boost::accumulators::geometric_mean_mirror(acc),
-        tanimoto_max = boost::accumulators::max(acc);
+          tanimoto_geo_mean = boost::accumulators::geometric_mean_mirror(acc),
+          tanimoto_max = boost::accumulators::max(acc);
 
     bool mean_pass = tanimoto_mean < _filter_params.tanimoto_mean_threshold,
-        geo_mean_pass = tanimoto_geo_mean < _filter_params.tanimoto_geo_mean_threshold,
-        max_pass = tanimoto_max < _filter_params.tanimoto_max_threshold;
+         geo_mean_pass = tanimoto_geo_mean < _filter_params.tanimoto_geo_mean_threshold,
+         max_pass = tanimoto_max < _filter_params.tanimoto_max_threshold;
 
     // Debug log
-    if (logger().is_debug_enabled())
-    {
+    if (logger().is_debug_enabled()) {
         {
             std::stringstream ss;
             ss << "SS Tanimoto filter: tanimoto mean = " << tanimoto_mean
@@ -485,4 +486,5 @@ bool metapopulation::ss_tanimoto_filter(const representation& rep,
     return mean_pass and geo_mean_pass and max_pass;
 }
 
-}}
+}
+}

@@ -55,8 +55,10 @@
 
 class metapopulationUTest;
 
-namespace opencog {
-namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 /**
  * The metapopulation stores a pool of combo trees that are drawn from
@@ -150,7 +152,10 @@ public:
     ~metapopulation() {}
 
     const scored_combo_tree_set& best_candidates() const;
-    const ensemble& get_ensemble() const { return _ensemble; }
+    const ensemble& get_ensemble() const
+    {
+        return _ensemble;
+    }
     composite_score best_composite_score() const;
     const combo_tree& best_tree() const;
 	const scored_atomese_set& best_atomese_candidates() const;
@@ -160,11 +165,15 @@ public:
      * Return the best model score (either the score of the
      * highest-scoring tree in the metapop, or the ensemble score).
      */
-    score_t best_score() const {
+    score_t best_score() const
+    {
         return best_composite_score().get_score();
     }
 
-    behave_cscore& get_cscorer() const { return  _cscorer; }
+    behave_cscore& get_cscorer() const
+    {
+        return  _cscorer;
+    }
 
     // ---------------- Deme-expansion-related -----------------------
 public:
@@ -188,18 +197,51 @@ public:
 
 	scored_atomese_ptr_set::const_iterator select_atomese_exemplar();
 
-    const scored_combo_tree_ptr_set& get_trees() const { return _scored_trees; }
-    scored_combo_tree_ptr_set::const_iterator begin() const { return _scored_trees.begin(); }
-    scored_combo_tree_ptr_set::const_iterator end() const { return _scored_trees.end(); }
-    bool empty() const { return _scored_trees.empty(); }
-    size_t size() const { return _scored_trees.size(); }
-    void clear() { _scored_trees.clear(); }
+    const scored_combo_tree_ptr_set& get_trees() const
+    {
+        return _scored_trees;
+    }
+    scored_combo_tree_ptr_set::const_iterator begin() const
+    {
+        return _scored_trees.begin();
+    }
+    scored_combo_tree_ptr_set::const_iterator end() const
+    {
+        return _scored_trees.end();
+    }
+    bool empty() const
+    {
+        return _scored_trees.empty();
+    }
+    size_t size() const
+    {
+        return _scored_trees.size();
+    }
+    void clear()
+    {
+        _scored_trees.clear();
+    }
 
-	const scored_atomese_ptr_set& get_handles() const { return _scored_atomeses; }
-	scored_atomese_ptr_set::const_iterator at_begin() const { return _scored_atomeses.begin(); }
-	scored_atomese_ptr_set::const_iterator at_end() const { return _scored_atomeses.end(); }
-	bool at_empty() const { return _scored_atomeses.empty(); }
-	size_t at_size() const { return _scored_atomeses.size(); }
+    const scored_atomese_ptr_set& get_handles() const
+    {
+        return _scored_atomeses;
+    }
+    scored_atomese_ptr_set::const_iterator at_begin() const
+    {
+        return _scored_atomeses.begin();
+    }
+    scored_atomese_ptr_set::const_iterator at_end() const
+    {
+        return _scored_atomeses.end();
+    }
+    bool at_empty() const
+    {
+        return _scored_atomeses.empty();
+    }
+    size_t at_size() const
+    {
+        return _scored_atomeses.size();
+    }
 
     // -------------------------- Merge related ----------------------
 public:
@@ -241,8 +283,8 @@ public:
     bool merge_demes(std::vector<std::vector<deme_t>>& demes,
                      const boost::ptr_vector<representation>& reps);
 
-	bool merge_demes_atomese(std::vector<std::vector<deme_t>>& demes,
-					 const boost::ptr_vector<representation>& reps);
+    bool merge_demes_atomese(std::vector<std::vector<deme_t>>& demes,
+                             const boost::ptr_vector<representation>& reps);
 
     /// Update the record of the best score seen, and the associated tree.
     /// Safe to call in a multi-threaded context.
@@ -326,7 +368,8 @@ private:
      * candidates. (actually not used apart from a comment of
      * aggregated_dps)
      */
-    dp_t distort_dp(dp_t dp) const {
+    dp_t distort_dp(dp_t dp) const
+    {
         return pow(dp, _params.diversity.exponent);
     }
     /**
@@ -336,7 +379,8 @@ private:
      * aggregated_dps(sum_i distort_dp(x_i), N) == generalized_mean(x)
      * where N is the size of x.
      */
-    dp_t aggregated_dps(dp_t ddp_sum, unsigned N) const {
+    dp_t aggregated_dps(dp_t ddp_sum, unsigned N) const
+    {
         return pow(ddp_sum / N, 1.0 / _params.diversity.exponent);
     }
 
@@ -363,8 +407,7 @@ private:
 
 public:
     // Structure holding stats about diversity
-    struct diversity_stats
-    {
+    struct diversity_stats {
         double count;    // number of pairs of candidates considered
         double mean;     // average bscore distance between all candidates
         double std;      // std dev bscore distance between all candidates
@@ -385,7 +428,8 @@ public:
      * tries to make sure that the metapopulation is as diverse as posible,
      * thus, in principle, speeding learning.
      */
-    bool diversity_enabled() const {
+    bool diversity_enabled() const
+    {
         return _params.diversity.enabled();
     }
 private:
@@ -400,8 +444,7 @@ private:
      *
      * 2) we need to remove the pairs containing deleted pointers
      */
-    struct cached_dst
-    {
+    struct cached_dst {
         // ctor
         cached_dst(const diversity_parameters& dparams)
             : _dparams(dparams), misses(0), hits(0) {}
@@ -439,7 +482,8 @@ private:
     cached_dst _cached_dst;
 
 public:
-    const cached_dst& get_cached_dst() const {
+    const cached_dst& get_cached_dst() const
+    {
         return _cached_dst;
     }
 
@@ -448,12 +492,12 @@ private:
     friend class ::metapopulationUTest;  // the tester tests the domination code...
 
     typedef std::pair<scored_combo_tree_set,
-                      scored_combo_tree_set> scored_combo_tree_set_pair;
+            scored_combo_tree_set> scored_combo_tree_set_pair;
     typedef std::vector<const scored_combo_tree*> scored_combo_tree_ptr_vec;
     typedef scored_combo_tree_ptr_vec::iterator scored_combo_tree_ptr_vec_it;
     typedef scored_combo_tree_ptr_vec::const_iterator scored_combo_tree_ptr_vec_cit;
     typedef std::pair<scored_combo_tree_ptr_vec,
-                      scored_combo_tree_ptr_vec> scored_combo_tree_ptr_vec_pair;
+            scored_combo_tree_ptr_vec> scored_combo_tree_ptr_vec_pair;
 
 	typedef std::pair<scored_atomese_set,
 			scored_atomese_set> scored_atomese_set_pair;
@@ -568,10 +612,10 @@ private:
     // filter
     typedef boost::accumulators::accumulator_set
     <double,
-     boost::accumulators::stats<boost::accumulators::tag::count,
-                                boost::accumulators::tag::mean,
-                                boost::accumulators::tag::geometric_mean_mirror,
-                                boost::accumulators::tag::max>> tanimoto_acc_t;
+    boost::accumulators::stats<boost::accumulators::tag::count,
+    boost::accumulators::tag::mean,
+    boost::accumulators::tag::geometric_mean_mirror,
+    boost::accumulators::tag::max>> tanimoto_acc_t;
 
     // In case of ss filter, the candidates during optimization will
     // not have their scores computed over the whole dataset, that
@@ -654,8 +698,8 @@ protected:
     ///  been previously expanded. The count indicated the number of
     /// times that they've been expanded.
     typedef std::unordered_map<scored_combo_tree, unsigned,
-                               scored_combo_tree_hash,
-                               scored_combo_tree_equal> scored_tree_counter;
+            scored_combo_tree_hash,
+            scored_combo_tree_equal> scored_tree_counter;
 
     typedef std::unordered_map<scored_atomese, unsigned,
             scored_atomese_hash,

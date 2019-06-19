@@ -29,8 +29,10 @@
 #include "../scoring/behave_cscore.h"
 #include "../scoring/scoring_base.h"
 
-namespace opencog {
-namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 /**
  * The ensemble holds a collection of the fittest combo trees.  The
@@ -65,7 +67,8 @@ public:
 
     void add_candidates(scored_combo_tree_set&);
 
-    const scored_combo_tree_set& get_ensemble() const {
+    const scored_combo_tree_set& get_ensemble() const
+    {
         return _scored_trees;
     }
 
@@ -91,7 +94,8 @@ private:
     const combo::combo_tree& get_expert_tree() const;
 };
 
-}}; // namespace opencog::moses
+}
+}; // namespace opencog::moses
 
 #endif // _OPENCOG_ENSEMBLE_H
 

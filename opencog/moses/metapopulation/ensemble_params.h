@@ -24,30 +24,32 @@
 #ifndef _OPENCOG_ENSEMBLE_PARAMS_H
 #define _OPENCOG_ENSEMBLE_PARAMS_H
 
-namespace opencog {
-namespace moses {
-
-struct ensemble_parameters
+namespace opencog
 {
-	ensemble_parameters() :
-		do_boosting(false),
-		experts(false),
-		exact_experts(true),
-		expalpha(2.0),
-		bias_scale(1.0),
-		num_to_promote(1)
-	{}
+namespace moses
+{
 
-	bool do_boosting;    // boosting is enabled ...
-	bool experts;        // do "ensemble-of-experts" boosting.
-	bool exact_experts;  // experts must be perfectly correct.
-	double expalpha;     // Ad-hoc exact-expert boosting coefficient.
-	double bias_scale;   // Ad-hoc inexact-expert bias scale.
-	int num_to_promote;  // max number of demes to accept into ensemble,
-	                     // per learning iteration.
+struct ensemble_parameters {
+    ensemble_parameters() :
+        do_boosting(false),
+        experts(false),
+        exact_experts(true),
+        expalpha(2.0),
+        bias_scale(1.0),
+        num_to_promote(1)
+    {}
+
+    bool do_boosting;    // boosting is enabled ...
+    bool experts;        // do "ensemble-of-experts" boosting.
+    bool exact_experts;  // experts must be perfectly correct.
+    double expalpha;     // Ad-hoc exact-expert boosting coefficient.
+    double bias_scale;   // Ad-hoc inexact-expert bias scale.
+    int num_to_promote;  // max number of demes to accept into ensemble,
+    // per learning iteration.
 };
 
-}}; // namespace opencog::moses
+}
+}; // namespace opencog::moses
 
 #endif // _OPENCOG_ENSEMBLE_PARAMS_H
 

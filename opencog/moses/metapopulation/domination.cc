@@ -30,8 +30,10 @@
 
 #include "metapopulation.h"
 
-namespace opencog {
-namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 using namespace std;
 using boost::logic::tribool;
@@ -68,7 +70,7 @@ using namespace combo;
  *                       indeterminate otherwise
  */
 boost::logic::tribool metapopulation::dominates(const behavioral_score& x,
-                                                const behavioral_score& y)
+        const behavioral_score& y)
 {
     // everything dominates an empty vector
     if (x.empty()) {
@@ -80,8 +82,7 @@ boost::logic::tribool metapopulation::dominates(const behavioral_score& x,
     }
     boost::logic::tribool res = boost::logic::indeterminate;
     for (behavioral_score::const_iterator xit = x.begin(), yit = y.begin();
-         xit != x.end(); ++xit, ++yit)
-    {
+         xit != x.end(); ++xit, ++yit) {
         if (*xit > *yit) {
             if (!res)
                 return boost::logic::indeterminate;
@@ -154,13 +155,13 @@ metapopulation::get_nondominated_iter(const scored_combo_tree_set& bcs)
 }
 
 typedef std::pair<scored_combo_tree_set,
-                  scored_combo_tree_set> scored_combo_tree_set_pair;
+        scored_combo_tree_set> scored_combo_tree_set_pair;
 
 typedef std::vector<const scored_combo_tree*> scored_combo_tree_ptr_vec;
 typedef scored_combo_tree_ptr_vec::iterator scored_combo_tree_ptr_vec_it;
 typedef scored_combo_tree_ptr_vec::const_iterator scored_combo_tree_ptr_vec_cit;
 typedef std::pair<scored_combo_tree_ptr_vec,
-                  scored_combo_tree_ptr_vec> scored_combo_tree_ptr_vec_pair;
+        scored_combo_tree_ptr_vec> scored_combo_tree_ptr_vec_pair;
 
 typedef std::pair<scored_atomese_set,
         scored_atomese_set> scored_atomese_set_pair;
@@ -170,7 +171,7 @@ typedef std::pair<scored_atomese_ptr_vec,
 
 scored_combo_tree_ptr_vec
 metapopulation::get_nondominated_rec(const scored_combo_tree_ptr_vec& bcv,
-                     unsigned jobs)
+                                     unsigned jobs)
 {
     ///////////////
     // base case //
@@ -183,9 +184,9 @@ metapopulation::get_nondominated_rec(const scored_combo_tree_ptr_vec& bcv,
     //////////////
 //  The names in enum std::launch have not yet been standardized.
 #if defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ >= 5) && (__GNUC_MINOR__ < 7)
- #define LAUNCH_SYNC std::launch::sync
+#define LAUNCH_SYNC std::launch::sync
 #else
- #define LAUNCH_SYNC std::launch::deferred
+#define LAUNCH_SYNC std::launch::deferred
 #endif
     scored_combo_tree_ptr_vec_pair bcv_p = split(bcv);
     if (jobs > 1) { // multi-threaded
@@ -193,7 +194,9 @@ metapopulation::get_nondominated_rec(const scored_combo_tree_ptr_vec& bcv,
         // recursive calls
         std::future<scored_combo_tree_ptr_vec> task =
             std::async(jobs > 1 ? std::launch::async : LAUNCH_SYNC,
-                       [&]() { return get_nondominated_rec(bcv_p.first, s_jobs.first); });
+        [&]() {
+            return get_nondominated_rec(bcv_p.first, s_jobs.first);
+        });
         scored_combo_tree_ptr_vec bcv2_nd =
             get_nondominated_rec(bcv_p.second, s_jobs.second);
         scored_combo_tree_ptr_vec_pair res_p =
@@ -204,10 +207,10 @@ metapopulation::get_nondominated_rec(const scored_combo_tree_ptr_vec& bcv,
     } else { // single-threaded
         // recursive calls
         scored_combo_tree_ptr_vec
-            bcv1_nd = get_nondominated_rec(bcv_p.first),
-            bcv2_nd = get_nondominated_rec(bcv_p.second);
+        bcv1_nd = get_nondominated_rec(bcv_p.first),
+        bcv2_nd = get_nondominated_rec(bcv_p.second);
         scored_combo_tree_ptr_vec_pair
-            res_p = get_nondominated_disjoint_rec(bcv1_nd, bcv2_nd);
+        res_p = get_nondominated_disjoint_rec(bcv1_nd, bcv2_nd);
         // union and return
         append(res_p.first, res_p.second);
         return res_p.first;
@@ -216,7 +219,7 @@ metapopulation::get_nondominated_rec(const scored_combo_tree_ptr_vec& bcv,
 
 scored_atomese_ptr_vec
 metapopulation::get_nondominated_rec(const scored_atomese_ptr_vec& bcv,
-                     unsigned jobs)
+                                     unsigned jobs)
 {
     ///////////////
     // base case //
@@ -229,9 +232,9 @@ metapopulation::get_nondominated_rec(const scored_atomese_ptr_vec& bcv,
     //////////////
 //  The names in enum std::launch have not yet been standardized.
 #if defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ >= 5) && (__GNUC_MINOR__ < 7)
- #define LAUNCH_SYNC std::launch::sync
+#define LAUNCH_SYNC std::launch::sync
 #else
- #define LAUNCH_SYNC std::launch::deferred
+#define LAUNCH_SYNC std::launch::deferred
 #endif
     scored_atomese_ptr_vec_pair bcv_p = split(bcv);
     if (jobs > 1) { // multi-threaded
@@ -239,7 +242,9 @@ metapopulation::get_nondominated_rec(const scored_atomese_ptr_vec& bcv,
         // recursive calls
         std::future<scored_atomese_ptr_vec> task =
             std::async(jobs > 1 ? std::launch::async : LAUNCH_SYNC,
-                       [&]() { return get_nondominated_rec(bcv_p.first, s_jobs.first); });
+        [&]() {
+            return get_nondominated_rec(bcv_p.first, s_jobs.first);
+        });
         scored_atomese_ptr_vec bcv2_nd =
             get_nondominated_rec(bcv_p.second, s_jobs.second);
         scored_atomese_ptr_vec_pair res_p =
@@ -250,10 +255,10 @@ metapopulation::get_nondominated_rec(const scored_atomese_ptr_vec& bcv,
     } else { // single-threaded
         // recursive calls
         scored_atomese_ptr_vec
-            bcv1_nd = get_nondominated_rec(bcv_p.first),
-            bcv2_nd = get_nondominated_rec(bcv_p.second);
+        bcv1_nd = get_nondominated_rec(bcv_p.first),
+        bcv2_nd = get_nondominated_rec(bcv_p.second);
         scored_atomese_ptr_vec_pair
-            res_p = get_nondominated_disjoint_rec(bcv1_nd, bcv2_nd);
+        res_p = get_nondominated_disjoint_rec(bcv1_nd, bcv2_nd);
         // union and return
         append(res_p.first, res_p.second);
         return res_p.first;
@@ -281,8 +286,8 @@ metapopulation::to_set(const scored_atomese_ptr_vec& bcv)
 
 scored_combo_tree_set_pair
 metapopulation::get_nondominated_disjoint(const scored_combo_tree_set& bcs1,
-                          const scored_combo_tree_set& bcs2,
-                          unsigned jobs)
+        const scored_combo_tree_set& bcs2,
+        unsigned jobs)
 {
     scored_combo_tree_ptr_vec_pair res_p =
         get_nondominated_disjoint_rec(random_access_view(bcs1),
@@ -293,8 +298,8 @@ metapopulation::get_nondominated_disjoint(const scored_combo_tree_set& bcs1,
 
 scored_atomese_set_pair
 metapopulation::get_nondominated_disjoint(const scored_atomese_set& bcs1,
-                          const scored_atomese_set& bcs2,
-                          unsigned jobs)
+        const scored_atomese_set& bcs2,
+        unsigned jobs)
 {
     scored_atomese_ptr_vec_pair res_p =
         get_nondominated_disjoint_rec(random_access_view(bcs1),
@@ -305,8 +310,8 @@ metapopulation::get_nondominated_disjoint(const scored_atomese_set& bcs1,
 
 scored_combo_tree_ptr_vec_pair
 metapopulation::get_nondominated_disjoint_rec(const scored_combo_tree_ptr_vec& bcv1,
-                              const scored_combo_tree_ptr_vec& bcv2,
-                              unsigned jobs)
+        const scored_combo_tree_ptr_vec& bcv2,
+        unsigned jobs)
 {
     ///////////////
     // base case //
@@ -316,9 +321,9 @@ metapopulation::get_nondominated_disjoint_rec(const scored_combo_tree_ptr_vec& b
     else if (bcv1.size() == 1) {
         scored_combo_tree_ptr_vec bcv_res1, bcv_res2;
         scored_combo_tree_ptr_vec_cit it1 = bcv1.begin(),
-            it2 = bcv2.begin();
+                                      it2 = bcv2.begin();
         bool it1_insert = true; // whether *it1 is to be inserted
-                                // in bcv_res1
+        // in bcv_res1
         for (; it2 != bcv2.end(); ++it2) {
             tribool dom = dominates((*it1)->get_bscore(), (*it2)->get_bscore());
             if (!dom) {
@@ -342,7 +347,9 @@ metapopulation::get_nondominated_disjoint_rec(const scored_combo_tree_ptr_vec& b
         unsigned jobs2 = std::max(1U, jobs - jobs1);
         std::future<scored_combo_tree_ptr_vec_pair> task =
             std::async(std::launch::async,
-                       [&]() { return get_nondominated_disjoint_rec(bcv1_p.first, bcv2, jobs1); });
+        [&]() {
+            return get_nondominated_disjoint_rec(bcv1_p.first, bcv2, jobs1);
+        });
         scored_combo_tree_ptr_vec_pair bcv_m2 =
             get_nondominated_disjoint_rec(bcv1_p.second, bcv2, jobs2);
         scored_combo_tree_ptr_vec_pair bcv_m1 = task.get();
@@ -354,9 +361,9 @@ metapopulation::get_nondominated_disjoint_rec(const scored_combo_tree_ptr_vec& b
         return std::make_pair(bcv_m1.first, bcv_m2_inter);
     } else { // single-threaded
         scored_combo_tree_ptr_vec_pair
-            bcv_m1 = get_nondominated_disjoint_rec(bcv1_p.first, bcv2),
-            bcv_m2 = get_nondominated_disjoint_rec(bcv1_p.second,
-                                                   bcv_m1.second);
+        bcv_m1 = get_nondominated_disjoint_rec(bcv1_p.first, bcv2),
+        bcv_m2 = get_nondominated_disjoint_rec(bcv1_p.second,
+                                               bcv_m1.second);
         // merge results
         append(bcv_m1.first, bcv_m2.first);
         return std::make_pair(bcv_m1.first, bcv_m2.second);
@@ -365,8 +372,8 @@ metapopulation::get_nondominated_disjoint_rec(const scored_combo_tree_ptr_vec& b
 
 scored_atomese_ptr_vec_pair
 metapopulation::get_nondominated_disjoint_rec(const scored_atomese_ptr_vec& bcv1,
-                              const scored_atomese_ptr_vec& bcv2,
-                              unsigned jobs)
+        const scored_atomese_ptr_vec& bcv2,
+        unsigned jobs)
 {
     ///////////////
     // base case //
@@ -376,9 +383,9 @@ metapopulation::get_nondominated_disjoint_rec(const scored_atomese_ptr_vec& bcv1
     else if (bcv1.size() == 1) {
         scored_atomese_ptr_vec bcv_res1, bcv_res2;
         scored_atomese_ptr_vec_cit it1 = bcv1.begin(),
-            it2 = bcv2.begin();
+                                   it2 = bcv2.begin();
         bool it1_insert = true; // whether *it1 is to be inserted
-                                // in bcv_res1
+        // in bcv_res1
         for (; it2 != bcv2.end(); ++it2) {
             tribool dom = dominates((*it1)->get_bscore(), (*it2)->get_bscore());
             if (!dom) {
@@ -402,7 +409,9 @@ metapopulation::get_nondominated_disjoint_rec(const scored_atomese_ptr_vec& bcv1
         unsigned jobs2 = std::max(1U, jobs - jobs1);
         std::future<scored_atomese_ptr_vec_pair> task =
             std::async(std::launch::async,
-                       [&]() { return get_nondominated_disjoint_rec(bcv1_p.first, bcv2, jobs1); });
+        [&]() {
+            return get_nondominated_disjoint_rec(bcv1_p.first, bcv2, jobs1);
+        });
         scored_atomese_ptr_vec_pair bcv_m2 =
             get_nondominated_disjoint_rec(bcv1_p.second, bcv2, jobs2);
         scored_atomese_ptr_vec_pair bcv_m1 = task.get();
@@ -414,9 +423,9 @@ metapopulation::get_nondominated_disjoint_rec(const scored_atomese_ptr_vec& bcv1
         return std::make_pair(bcv_m1.first, bcv_m2_inter);
     } else { // single-threaded
         scored_atomese_ptr_vec_pair
-            bcv_m1 = get_nondominated_disjoint_rec(bcv1_p.first, bcv2),
-            bcv_m2 = get_nondominated_disjoint_rec(bcv1_p.second,
-                                                   bcv_m1.second);
+        bcv_m1 = get_nondominated_disjoint_rec(bcv1_p.first, bcv2),
+        bcv_m2 = get_nondominated_disjoint_rec(bcv1_p.second,
+                                               bcv_m1.second);
         // merge results
         append(bcv_m1.first, bcv_m2.first);
         return std::make_pair(bcv_m1.first, bcv_m2.second);
@@ -453,19 +462,19 @@ void metapopulation::merge_nondominated(const scored_atomese_set& bcs, unsigned 
     for (const scored_atomese& cnd : bcs)
         bcv_mp.push_back(&cnd);
     scored_atomese_ptr_vec_pair bcv_p =
-            get_nondominated_disjoint_rec(bcv, bcv_mp, jobs);
+        get_nondominated_disjoint_rec(bcv, bcv_mp, jobs);
 
     // remove the dominated ones from the metapopulation
     boost::sort(bcv_mp);
     boost::sort(bcv_p.second);
     scored_atomese_ptr_vec diff_bcv_mp =
-            set_difference(bcv_mp, bcv_p.second);
-    for (const scored_atomese* cnd : diff_bcv_mp){
+        set_difference(bcv_mp, bcv_p.second);
+    for (const scored_atomese* cnd : diff_bcv_mp) {
 //        _as.remove_atom(cnd->as_scored_handle());
         _scored_atomeses.erase(*cnd);
     }
     // add the nondominated ones from bsc
-    for (const scored_atomese* cnd : bcv_p.first){
+    for (const scored_atomese* cnd : bcv_p.first) {
         scored_atomese *sa = new scored_atomese(*cnd);
         _scored_atomeses.insert(sa);
 //        _as.add_atom(sa->as_scored_handle());
