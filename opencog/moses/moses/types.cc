@@ -36,7 +36,10 @@
 #include "complexity.h"
 
 
-namespace opencog { namespace moses {
+namespace opencog
+{
+namespace moses
+{
 
 using namespace std;
 
@@ -46,18 +49,20 @@ demeID_t::demeID_t(unsigned expansion, unsigned breadth_first)
 	: string(to_string(expansion) + "." + to_string(breadth_first)) {}
 demeID_t::demeID_t(unsigned expansion, unsigned breadth_first, unsigned ss_deme)
 	: string(to_string(expansion) + "." +
-	         to_string(breadth_first) + ".SS-" +
-	         to_string(ss_deme)) {}
+			 to_string(breadth_first) + ".SS-" +
+			 to_string(ss_deme)) {}
 
-bool scored_combo_tree::operator==(const scored_combo_tree& r) const {
+bool scored_combo_tree::operator==(const scored_combo_tree& r) const
+{
 	return get_tree() == r.get_tree()
-		and get_demeID() == r.get_demeID()
-		and get_bscore() == r.get_bscore()
-		and get_weight() == r.get_weight()
-		and get_composite_score() == r.get_composite_score();
+		   and get_demeID() == r.get_demeID()
+		   and get_bscore() == r.get_bscore()
+		   and get_weight() == r.get_weight()
+		   and get_composite_score() == r.get_composite_score();
 }
 
-bool scored_atomese::operator==(const scored_atomese& r) const {
+bool scored_atomese::operator==(const scored_atomese& r) const
+{
 	return get_handle() == r.get_handle()
 		   and get_demeID() == r.get_demeID()
 		   and get_bscore() == r.get_bscore()
@@ -77,27 +82,27 @@ size_t scored_combo_tree_hash::operator()(const scored_combo_tree& sct) const
 //atomese
 size_t scored_atomese_hash::operator()(const scored_atomese& sct) const
 {
-    return hash_value(sct.get_handle());
+	return hash_value(sct.get_handle());
 }
 
 
 
 bool scored_combo_tree_equal::operator()(const scored_combo_tree& tr1,
-                                         const scored_combo_tree& tr2) const
+		const scored_combo_tree& tr2) const
 {
 	return tr1.get_tree() == tr2.get_tree();
 }
 //atomese
 bool scored_atomese_equal::operator()(const scored_atomese& h1,
-                                         const scored_atomese& h2) const
+									  const scored_atomese& h2) const
 {
-	 return h1.get_handle() == h2.get_handle();
+	return h1.get_handle() == h2.get_handle();
 }
 
 
 // See header file for description.
 bool sct_score_greater::operator()(const scored_combo_tree& bs_tr1,
-                                   const scored_combo_tree& bs_tr2) const
+								   const scored_combo_tree& bs_tr2) const
 {
 	const composite_score csc1 = bs_tr1.get_composite_score();
 	const composite_score csc2 = bs_tr2.get_composite_score();
@@ -124,20 +129,20 @@ bool sct_score_greater::operator()(const scored_combo_tree& bs_tr1,
 bool sa_score_greater::operator()(const scored_atomese& bs_h1,
 								  const scored_atomese& bs_h2) const
 {
-    const composite_score csc1 = bs_h1.get_composite_score();
-    const composite_score csc2 = bs_h2.get_composite_score();
+	const composite_score csc1 = bs_h1.get_composite_score();
+	const composite_score csc2 = bs_h2.get_composite_score();
 
-    if (csc1 > csc2) return true;
-    if (csc1 < csc2) return false;
+	if (csc1 > csc2) return true;
+	if (csc1 < csc2) return false;
 
-    // If we are here, then they are equal.  We are desperate to break
-    // a tie, because otherwise, the scored_atomese_ptr_set will discard
-    // anything that compares equal, and we really don't want that.
-    score_t sc1 = csc1.get_score();
-    score_t sc2 = csc2.get_score();
+	// If we are here, then they are equal.  We are desperate to break
+	// a tie, because otherwise, the scored_atomese_ptr_set will discard
+	// anything that compares equal, and we really don't want that.
+	score_t sc1 = csc1.get_score();
+	score_t sc2 = csc2.get_score();
 
-    if (sc1 > sc2) return true;
-    if (sc1 < sc2) return false;
+	if (sc1 > sc2) return true;
+	if (sc1 < sc2) return false;
 
 	// Arghh, still tied!  The above already used complexity to break
 	// the tie.  Lets compare them based on content of the handle.
@@ -146,7 +151,7 @@ bool sa_score_greater::operator()(const scored_atomese& bs_h1,
 
 // See header file for description.
 bool sct_tree_greater::operator()(const scored_combo_tree& bs_tr1,
-                                  const scored_combo_tree& bs_tr2) const
+								  const scored_combo_tree& bs_tr2) const
 {
 	// size_tree_order first uses tree size, then the lexicographic
 	// order on the trees themselves, for comparisons.
@@ -182,15 +187,15 @@ bool composite_score::operator<(const composite_score &r) const
 		return !isnan(rig);
 	else
 		return (lef < rig)
-			// Note: I've tried to see if the addition below
-			// increases the performance when there is no
-			// complexity penalty and it doesn't, over 100 runs
-			// solving 3-parity is actually .5s slower (which
-			// probably has no statistical significance given it
-			// takes 13s in average). But I don't want to conclude
-			// too fast, it could have an impact on other
-			// problems.
-			or (lef == rig and complexity > r.complexity);
+			   // Note: I've tried to see if the addition below
+			   // increases the performance when there is no
+			   // complexity penalty and it doesn't, over 100 runs
+			   // solving 3-parity is actually .5s slower (which
+			   // probably has no statistical significance given it
+			   // takes 13s in average). But I don't want to conclude
+			   // too fast, it could have an impact on other
+			   // problems.
+			   or (lef == rig and complexity > r.complexity);
 }
 
 // Check for equality, to within floating-point error.
@@ -202,29 +207,29 @@ bool composite_score::operator==(const composite_score &r) const
 	// Note that complexity_t is an unsigned int.
 #define EPSILON static_cast<score_t>(1e-6)
 	return is_approx_eq(score, r.get_score(), EPSILON)
-		and complexity == r.get_complexity()
-		and is_approx_eq(complexity_penalty, r.get_complexity_penalty(), EPSILON)
-		and is_approx_eq(uniformity_penalty, r.get_uniformity_penalty(), EPSILON)
-		and is_approx_eq(penalized_score, r.get_penalized_score(), EPSILON);
+		   and complexity == r.get_complexity()
+		   and is_approx_eq(complexity_penalty, r.get_complexity_penalty(), EPSILON)
+		   and is_approx_eq(uniformity_penalty, r.get_uniformity_penalty(), EPSILON)
+		   and is_approx_eq(penalized_score, r.get_penalized_score(), EPSILON);
 }
 
 static const std::string behavioral_score_prefix_str = "behavioral score:";
 
 std::ostream& ostream_behavioral_score(std::ostream& out,
-                                       const behavioral_score& bs)
+									   const behavioral_score& bs)
 {
 	out << behavioral_score_prefix_str << " ";
 	return ostream_container(out, bs, " ", "[", "]");
 }
 
 std::ostream& ostream_scored_combo_tree(std::ostream& out,
-                                        const scored_combo_tree& sct,
-                                        bool output_score,
-                                        bool output_cscore,
-                                        bool output_demeID,
-                                        bool output_bscore,
-                                        const vector<string>& labels,
-                                        combo::output_format fmt)
+										const scored_combo_tree& sct,
+										bool output_score,
+										bool output_cscore,
+										bool output_demeID,
+										bool output_bscore,
+										const vector<string>& labels,
+										combo::output_format fmt)
 {
 	if (output_score)
 		out << sct.get_score() << " ";
@@ -239,7 +244,7 @@ std::ostream& ostream_scored_combo_tree(std::ostream& out,
 		out << " " << sct.get_composite_score();
 
 	if (output_demeID)
-	    out << " demeID: " << sct.get_demeID();
+		out << " demeID: " << sct.get_demeID();
 
 	if (output_bscore and sct.get_bscore().size() > 0)
 		ostream_behavioral_score(out << " ", sct.get_bscore());
@@ -284,26 +289,26 @@ scored_combo_tree string_to_scored_combo_tree(const std::string& line)
 
 	static const string uncaptured_float_re = "[-+]?\\d*\\.?\\d+(?:[eE][-+]?\\d+)?";
 	static const string float_re = string("(") + uncaptured_float_re + ")";
- 
+
 	// very crude because handed to another parser
 	static const string combo_tree_re = "(.+)";
 
 	static const string cscore_re = string("\\[")
-		+ "score=" + float_re + ", "
-		+ "penalized score=" + float_re + ", "
-		+ "complexity=" + "(\\d+)" + ", "
-		+ "complexity penalty=" + float_re + ", "
-		+ "uniformity penalty=" + float_re + "\\]";
+									+ "score=" + float_re + ", "
+									+ "penalized score=" + float_re + ", "
+									+ "complexity=" + "(\\d+)" + ", "
+									+ "complexity penalty=" + float_re + ", "
+									+ "uniformity penalty=" + float_re + "\\]";
 
 	static const string demeID_re = string("( demeID: ")
-		+ "([0-9]+)(\\.([0-9]+))?(\\.SS-([0-9]+))?)?";
+									+ "([0-9]+)(\\.([0-9]+))?(\\.SS-([0-9]+))?)?";
 
 	// very crude because handed to another parser
 	static const string bscore_re = string("behavioral score: (\\[.+\\])");
 	static const string opt_bscore_re = string("( ") + bscore_re + ")?"; // optional
 
 	static const string scored_combo_tree_re = "^" + float_re + " "
-		+ combo_tree_re + " " + cscore_re + demeID_re + opt_bscore_re + "\n?$";
+			+ combo_tree_re + " " + cscore_re + demeID_re + opt_bscore_re + "\n?$";
 
 	static const boost::regex sct_regex(scored_combo_tree_re);
 
@@ -315,10 +320,10 @@ scored_combo_tree string_to_scored_combo_tree(const std::string& line)
 	//     cout << "sct_match[" << i << "] = \"" << sct_match[i] << "\"" << std::endl;
 
 	OC_ASSERT(match_result, "Line '%s' doesn't match regex '%s'",
-	          line.c_str(), scored_combo_tree_re.c_str());
+			  line.c_str(), scored_combo_tree_re.c_str());
 	OC_ASSERT(sct_match.size() == 16,
-	          "Wrong number of sub-matches %u, 10 are expected",
-	          sct_match.size());
+			  "Wrong number of sub-matches %u, 10 are expected",
+			  sct_match.size());
 
 	// Parse score
 	score_t sc = std::stof(sct_match[1]);
@@ -330,7 +335,7 @@ scored_combo_tree string_to_scored_combo_tree(const std::string& line)
 	// Parse composite score
 	complexity_t cpx = std::stoi(sct_match[5].str());
 	score_t cpx_penalty = std::stof(sct_match[6].str()),
-		uniformity_penalty = std::stof(sct_match[7].str());
+			uniformity_penalty = std::stof(sct_match[7].str());
 	composite_score cs(sc, cpx, cpx_penalty, uniformity_penalty);
 
 	// Parse demeID
@@ -360,7 +365,8 @@ scored_combo_tree string_to_scored_combo_tree(const std::string& line)
 
 // Fill a vector of scored_combo_tree parsed from stream
 std::istream& istream_scored_combo_trees(std::istream& in,
-                                         std::vector<scored_combo_tree>& scts) {
+		std::vector<scored_combo_tree>& scts)
+{
 	for (std::string line; std::getline(in, line); )
 		scts.push_back(string_to_scored_combo_tree(line));
 	return in;
@@ -369,7 +375,7 @@ std::istream& istream_scored_combo_trees(std::istream& in,
 } // ~namespace moses
 
 std::string oc_to_string(const moses::composite_score& cs,
-                         const std::string &indent)
+						 const std::string &indent)
 {
 	std::stringstream ss;
 	moses::operator<<(ss, cs);
@@ -377,7 +383,7 @@ std::string oc_to_string(const moses::composite_score& cs,
 }
 
 std::string oc_to_string(const moses::behavioral_score& bs,
-                         const std::string &indent)
+						 const std::string &indent)
 {
 	std::stringstream ss;
 	moses::operator<<(ss, bs);
@@ -385,7 +391,7 @@ std::string oc_to_string(const moses::behavioral_score& bs,
 }
 
 std::string oc_to_string(const moses::scored_combo_tree &sct,
-                         const std::string &indent)
+						 const std::string &indent)
 {
 	std::stringstream ss;
 	moses::operator<<(ss, sct);
@@ -393,7 +399,7 @@ std::string oc_to_string(const moses::scored_combo_tree &sct,
 }
 
 std::string oc_to_string(const moses::scored_atomese &sa,
-                         const std::string &indent)
+						 const std::string &indent)
 {
 	std::stringstream ss;
 	moses::operator<<(ss, sa);
@@ -401,7 +407,7 @@ std::string oc_to_string(const moses::scored_atomese &sa,
 }
 
 std::string oc_to_string(const moses::scored_combo_tree_set& scts,
-                         const std::string &indent)
+						 const std::string &indent)
 {
 	std::stringstream ss;
 	ss << indent << "size = " << scts.size() << std::endl;
@@ -415,7 +421,7 @@ std::string oc_to_string(const moses::scored_combo_tree_set& scts,
 }
 
 std::string oc_to_string(const moses::scored_atomese_set& sas,
-                         const std::string &indent)
+						 const std::string &indent)
 {
 	std::stringstream ss;
 	ss << indent << "size = " << sas.size() << std::endl;
@@ -429,7 +435,7 @@ std::string oc_to_string(const moses::scored_atomese_set& sas,
 }
 
 std::string oc_to_string(const moses::scored_combo_tree_tset& sctts,
-                         const std::string &indent)
+						 const std::string &indent)
 {
 	std::stringstream ss;
 	ss << indent << "size = " << sctts.size() << std::endl;
@@ -443,7 +449,7 @@ std::string oc_to_string(const moses::scored_combo_tree_tset& sctts,
 }
 
 std::string oc_to_string(const moses::scored_combo_tree_ptr_set& sctps,
-                         const std::string &indent)
+						 const std::string &indent)
 {
 	std::stringstream ss;
 	ss << indent << "size = " << sctps.size() << std::endl;
@@ -457,7 +463,7 @@ std::string oc_to_string(const moses::scored_combo_tree_ptr_set& sctps,
 }
 
 std::string oc_to_string(const moses::scored_atomese_ptr_set& saps,
-                         const std::string &indent)
+						 const std::string &indent)
 {
 	std::stringstream ss;
 	ss << indent << "size = " << saps.size() << std::endl;
