@@ -2,8 +2,7 @@
 MOSES -- Meta-Optimizing Semantic Evolutionary Search
 =====================================================
 
-[![Build Status](http://61.92.69.39:8080/buildStatus/icon?job=ci-moses-master)](http://61.92.69.39:8080/job/ci-moses-master)
-
+[![CircleCI](https://img.shields.io/circleci/project/github/singnet/as-moses/master.svg)](https://circleci.com/gh/singnet/as-moses/tree/master)
 
 MOSES is a machine-learning tool; it is an "evolutionary program
 learner". It is capable of learning short programs that capture
@@ -86,7 +85,7 @@ few exceptions, most Linux distributions will provide these packages.
 Optional Prerequisites
 ----------------------
 The following packages are optional. If they are not installed, some
-optional parts of OpenCog will not be built.  The CMake command, during
+optional parts of MOSES will not be built.  The CMake command, during
 the build, will be more precise as to which parts will not be built.
 
 ###### MPI

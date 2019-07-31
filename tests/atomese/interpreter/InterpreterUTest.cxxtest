@@ -1,0 +1,211 @@
+/** InterpreterUTest.cxxtest ---
+ *
+ * Copyright (C) 2018 OpenCog Foundation
+ *
+ * Author: Kasim Ebrahim
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+
+#include <opencog/atoms/base/Handle.h>
+#include <opencog/atoms/base/Link.h>
+#include <opencog/atoms/base/Node.h>
+#include <opencog/atomese/interpreter/Interpreter.h>
+#include <opencog/atomese/interpreter/logical_interpreter.h>
+#include <opencog/atoms/core/NumberNode.h>
+#include <opencog/atoms/value/LinkValue.h>
+#include <opencog/atomese/interpreter/condlink_interpreter.h>
+
+#include "opencog/utils/value_key.h"
+
+using namespace std;
+using namespace opencog;
+
+class InterpreterUTest : public CxxTest::TestSuite{
+private:
+	Handle f1;
+	Handle f2;
+	Handle f3;
+	Handle p1;
+	Handle p2;
+	Handle p3;
+	ValuePtr t_link;
+	ValuePtr f_link;
+
+public:
+	InterpreterUTest(){
+		// initialization of program [schema]
+
+		f1 = createNode(SCHEMA_NODE, "f1");
+		f2 = createNode(SCHEMA_NODE, "f2");
+		f3 = createNode(SCHEMA_NODE, "f3");
+
+		std::vector<double> _f1_values = {1.0, 0.0, 0.0};
+		std::vector<double> _f2_values = {0.0, 1.0, 0.0};
+		std::vector<double> _f3_values = {0.0, 0.0, 0.0};
+		std::vector<double> _size_value = {3};
+
+		ValuePtr f1_proto_atom(new FloatValue(_f1_values));
+		f1->setValue(moses::value_key, f1_proto_atom);
+
+		ValuePtr f2_proto_atom(new FloatValue(_f2_values));
+		f2->setValue(moses::value_key, f2_proto_atom);
+
+		ValuePtr f3_proto_atom(new FloatValue(_f3_values));
+		f3->setValue(moses::value_key, f3_proto_atom);
+
+		// initialization of program [Boolean]
+		p1 = createNode(PREDICATE_NODE, "p1");
+		p2 = createNode(PREDICATE_NODE, "p2");
+		p3 = createNode(PREDICATE_NODE, "p3");
+
+		t_link = ValuePtr(createLink(TRUE_LINK));
+		f_link = ValuePtr(createLink(FALSE_LINK));
+
+		ValueSeq _p1 = {t_link, t_link, f_link};
+		ValueSeq _p2 = {f_link, t_link, f_link};
+		ValueSeq _p3 = {f_link, f_link, t_link};
+
+		ValuePtr p1_proto_atom(new LinkValue(_p1));
+		p1->setValue(moses::value_key, p1_proto_atom);
+
+		ValuePtr p2_proto_atom(new LinkValue(_p2));
+		p2->setValue(moses::value_key, p2_proto_atom);
+
+		ValuePtr p3_proto_atom(new LinkValue(_p3));
+		p3->setValue(moses::value_key, p3_proto_atom);
+	}
+
+	void test_interpret(void)
+	{
+		// Atomese program to be evaluated over the problem_data
+		HandleSeq seq = {f1, f2, f3};
+		Handle program = createLink(seq, PLUS_LINK);
+
+		// expected out put vector
+		std::vector<double> exp_value = {1.0, 1.0, 0.0};
+
+		// interpret
+		atomese::Interpreter interpreter(moses::value_key);
+		ValuePtr _result = interpreter(program);
+		std::vector<double> result = FloatValueCast(_result)->value();
+
+		TS_ASSERT(result == exp_value);
+	}
+
+	void test_interpret_constant(void)
+	{
+		// Atomese program to be evaluated over the problem_data
+		Handle c(createNumberNode(5.0));
+		HandleSeq seq = {f1, f2, c};
+		Handle program = createLink(seq, PLUS_LINK);
+
+		// expected out put vector
+		std::vector<double> exp_value = {6.0, 6.0, 5.0};
+
+		// interpret
+		atomese::Interpreter interpreter(moses::value_key);
+		ValuePtr _result = interpreter(program);
+		std::vector<double> result = FloatValueCast(_result)->value();
+
+		TS_ASSERT(result == exp_value);
+	}
+
+	void test_interpret_nested(void)
+	{
+		// Atomese program to be evaluated over the problem_data
+		Handle c(createNumberNode(5.0));
+		HandleSeq seq = {f1, f2};
+		HandleSeq program_seq = {createLink(seq, PLUS_LINK), c};
+		Handle program = createLink(program_seq, TIMES_LINK);
+
+
+		// expected out put vector
+		std::vector<double> exp_value = {5.0, 5.0, 0.0};
+
+		// interpret
+		atomese::Interpreter interpreter(moses::value_key);
+		ValuePtr _result = interpreter(program);
+		std::vector<double> result = FloatValueCast(_result)->value();
+
+		TS_ASSERT(result == exp_value);
+	}
+
+	void test_interpret_logical(void)
+	{
+		// Atomese program to be evaluated over the problem_data
+		HandleSeq seq1 = {p1, p2};
+		Handle sub_program1 = createLink(seq1, AND_LINK);
+		HandleSeq seq2 = {p3};
+		Handle sub_program2 = createLink(seq2, NOT_LINK);
+		HandleSeq seq3 = {sub_program1, sub_program2};
+		Handle program = createLink(seq3, OR_LINK);
+
+		// expected out put vector
+		ValueSeq exp_value = {t_link, t_link, f_link};
+		ValuePtr expected(new LinkValue(exp_value));
+
+		// interpret
+		atomese::Interpreter interpreter(moses::value_key);
+		ValuePtr result = interpreter(program);
+
+		TS_ASSERT(atomese::logical_compare(LinkValueCast(expected), LinkValueCast(result)));
+	}
+
+    void test_interpret_condlink(void)
+    {
+        // Atomese program to be evaluated over the condlink interpreter
+        HandleSeq seq1 = {p2, p3};
+        Handle predcte1 = createLink(seq1, OR_LINK);
+        HandleSeq seq2 = {p1, p2, createLink(TRUE_LINK)};
+        Handle exp1 = createLink(seq2, AND_LINK);
+        Handle program = createLink(COND_LINK, predcte1, exp1, p3);
+
+        // expected out put vector
+        ValueSeq exp_value = {f_link, t_link, f_link};
+        ValuePtr expected(new LinkValue(exp_value));
+
+        // interpret
+        atomese::Interpreter interpreter(moses::value_key);
+        ValuePtr result = interpreter(program);
+
+        TS_ASSERT(atomese::logical_compare(LinkValueCast(result), LinkValueCast(expected)));
+    }
+
+    void test_interpret_condlink2(void) {
+
+        // Atomese program to be evaluated over the condlink interpreter
+        Handle c(createNumberNode(5.0));
+        HandleSeq seq1 = {f1, c};
+        Handle plu1 = createLink(seq1, PLUS_LINK);
+        HandleSeq seq2 = {plu1, f2};
+        Handle tim1 = createLink(seq2, TIMES_LINK);
+        Handle program = createLink(COND_LINK, p1, tim1, f3);
+
+        // expected out put vector
+        std::vector<double> exp_value = {0.0, 5.0, 0.0};
+
+
+        // interpret
+        atomese::Interpreter interpreter(moses::value_key);
+        ValuePtr _result = interpreter(program);
+        std::vector<double> result = FloatValueCast(_result)->value();
+
+        TS_ASSERT(exp_value == result);
+    }
+
+};
