@@ -1,0 +1,22 @@
+digraph "callgraph" {
+  F5645ceb9c230 [label="__strlen_sse2\n160"];
+  F5645ceb9e0e0 [label="operator delete(void*) <cycle ...\n227"];
+  F5645cec960b0 [label="malloc <cycle 1>\n105"];
+  F5645cec9d940 [label="free\n223"];
+  F5645cf6ea690 [label="_int_free\n146"];
+  F5645cfa61c10 [label="_GLOBAL__sub_I_local_moses.cc\n1 823"];
+  F5645cfa62680 [label="std::__cxx11::basic_string<cha...\n802"];
+  F5645cfba77d0 [label="<cycle 1>\n858"];
+  F5645cfcc4960 [label="_dl_init\n1 823"];
+  F5645cfd1ee60 [label="call_init.part.0\n1 823"];
+  F5645ceb9e0e0 -> F5645cec9d940 [weight=1,label="223 (2x)"];
+  F5645cec9d940 -> F5645cf6ea690 [weight=1,label="146 (2x)"];
+  F5645cfa61c10 -> F5645cfa62680 [weight=1,label="802 (10x)"];
+  F5645cfa61c10 -> F5645cfba77d0 [weight=1,label="895 (17x)"];
+  F5645cfa62680 -> F5645ceb9c230 [weight=1,label="160 (10x)"];
+  F5645cfa62680 -> F5645cfba77d0 [weight=1,label="462 (10x)"];
+  F5645cfba77d0 -> F5645ceb9e0e0 [weight=1,label="227 (0x)"];
+  F5645cfba77d0 -> F5645cec960b0 [weight=1,label="105 (0x)"];
+  F5645cfcc4960 -> F5645cfd1ee60 [weight=2,label="1 823 (0x)"];
+  F5645cfd1ee60 -> F5645cfa61c10 [weight=2,label="1 823 (1x)"];
+}
