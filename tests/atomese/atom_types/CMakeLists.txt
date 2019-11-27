@@ -2,8 +2,10 @@ ADD_CXXTEST(ImpulseLinkUTest)
 TARGET_LINK_LIBRARIES(ImpulseLinkUTest
 	execution
 	smob
+	atomese
+	moses
+	ascombo
+	asmoses_types
 	${ATOMSPACE_LIBRARIES}
 	${COGUTIL_LIBRARY}
-	atomese
-	asmoses_types
 	)

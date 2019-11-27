@@ -8,4 +8,4 @@
 (load-extension "libasmoses_types" "asmoses_types_init")
 
 ; Load various parts....
-(load "asmoses/types/atom_types.scm")
+(load "atomese/atom_types/atom_types.scm")
