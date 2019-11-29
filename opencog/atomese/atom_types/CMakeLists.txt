@@ -12,12 +12,12 @@ ADD_CUSTOM_TARGET(asmoses_atom_types DEPENDS atom_types.h)
 
 ADD_LIBRARY(asmoses_types SHARED
 		atom_types
-		atom_types_init
+		atom_types_init.cc
 		ImpulseLink.cc)
 
 TARGET_LINK_LIBRARIES(asmoses_types
 		${ATOMSPACE_LIBRARIES}
-		${COGUTIL_LIBRARY})
+		)
 
 # Without this, parallel make will race and crap up the generated files.
 ADD_DEPENDENCIES(asmoses_types asmoses_atom_types)
