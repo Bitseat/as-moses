@@ -1,3 +1,4 @@
+DECLARE_GUILE_CONFIG_TARGET(SCM_CONFIG "opencog asmoses-config" "ASMOSES_TEST")
 ADD_SUBDIRECTORY(interpreter)
 ADD_SUBDIRECTORY(atom_types)
 ADD_SUBDIRECTORY(atomese_utils)
@@ -24,3 +25,7 @@ ELSE (WIN32)
 		LIBRARY DESTINATION "lib${LIB_DIR_SUFFIX}/opencog"   # lib*.so files
 		ARCHIVE DESTINATION "lib${LIB_DIR_SUFFIX}/opencog")  # lib*.a files
 ENDIF (WIN32)
+
+WRITE_GUILE_CONFIG(${GUILE_BIN_DIR}/opencog/asmoses-config.scm SCM_CONFIG TRUE)
+WRITE_GUILE_CONFIG(${GUILE_BIN_DIR}/opencog/asmoses-config-installable.scm SCM_CONFIG FALSE)
+INSTALL(FILES ${GUILE_BIN_DIR}/opencog/asmoses-config-installable.scm DESTINATION ${GUILE_SITE_DIR}/opencog RENAME asmoses-config.scm)

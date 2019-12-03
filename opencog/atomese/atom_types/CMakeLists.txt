@@ -30,7 +30,7 @@ ADD_GUILE_MODULE (FILES
         MODULE_DESTINATION "${GUILE_SITE_DIR}/opencog/atomese/atom_types"
         DEPENDS asmoses_atom_types
         )
-
+ADD_GUILE_EXTENSION(SCM_CONFIG asmoses_types "opencog-ext-path-asmoses-types")
 #install header files
 INSTALL(FILES
 
