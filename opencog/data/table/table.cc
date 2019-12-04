@@ -890,12 +890,15 @@ bool complete_truth_table::same_complete_truth_table(const combo_tree &tr) const
 	return true;
 }
 
-void complete_truth_table::populate(const Handle &handle)
+std::vector<ValueSeq> complete_truth_table::populate_nocache(const Handle &handle, std::vector<ValueSeq> &features)
 {
 	// create a vector containing values for each feature or arity.
 	// this will contain the inputs of the truth table.
-	std::vector<ValueSeq> features(_arity);
-	populate_features(features);
+	//std::vector<ValueSeq> features(_arity);
+	std::vector<ValueSeq> pop_features = populate_features(features);
+	//if(cache not empty)
+	//return cache_features;
+	//else
 
 	// map the values of inputs to the program.
 	setup_features(handle, features);
@@ -911,9 +914,22 @@ void complete_truth_table::populate(const Handle &handle)
 	// convert Links in the result of the interpreter to bool,
 	// and store it to the truth table.
 	std::transform(result.begin(), result.end(), begin(), bool_value_to_bool);
+	return pop_features;
 }
 
-void complete_truth_table::populate_features(std::vector<ValueSeq> &features)
+std::vector<ValueSeq> complete_truth_table::populate(const Handle &handle, std::vector<ValueSeq> &features)
+{
+	// Use the cache, if it is enabled.
+	if (_have_cache) return _batomese_cscore_cache(features);
+	return populate_nocache(handle, features);;
+}
+
+std::vector<ValueSeq> complete_truth_table::batomese_wrapper::operator()(const std::vector<ValueSeq> &features) const
+{
+	return self->populate_features(features);
+}
+
+std::vector<ValueSeq> complete_truth_table::populate_features(std::vector<ValueSeq> &features)
 {
 	auto it = begin();
 	for (int i = 0; it != end(); ++i, ++it) {
@@ -925,6 +941,17 @@ void complete_truth_table::populate_features(std::vector<ValueSeq> &features)
 			features[j].push_back(v);
 		}
 	}
+
+    return features;
+}
+
+std::vector<ValueSeq> complete_truth_table::cached_populate_features(std::vector<ValueSeq> &features)
+{
+    //logger().debug() << "cached_populate_features(), features="
+    //                 << features;
+    /// @todo replace by lru_cache once thread safe fixed
+    prr_cache_threaded<std::vector<ValueSeq>> populate_features(std::vector<ValueSeq> &features);
+    return populate_features(features);
 }
 
 void complete_truth_table::setup_features(const Handle &handle, const std::vector<ValueSeq> &features)

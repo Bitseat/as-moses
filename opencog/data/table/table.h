@@ -52,6 +52,8 @@
 #include <opencog/combo/combo/vertex.h>
 #include <opencog/combo/combo/common_def.h>
 
+#include <opencog/util/lru_cache.h>
+
 #define COEF_SAMPLE_COUNT 20.0 // involved in the formula that counts
 // the number of trials needed to check
 // a formula
@@ -1622,8 +1624,12 @@ class complete_truth_table : public bool_seq
 public:
 	typedef bool_seq super;
 
-	complete_truth_table()
-	{}
+	complete_truth_table(size_t initial_cache_size = 0)
+	: _have_cache(0 < initial_cache_size),
+	  _batomese_cscore_cache(initial_cache_size, _batomese_wrapper, "compositescore")
+	{
+		_batomese_wrapper.self = this;
+	}
 
 	template<typename It>
 	complete_truth_table(It from, It to) : super(from, to)
@@ -1644,7 +1650,9 @@ public:
 		populate(tr);
 	}
 
-	complete_truth_table(const Handle &)
+	complete_truth_table(const Handle &, size_t initial_cache_size = 0)
+	: _have_cache(0 < initial_cache_size),
+	  _batomese_cscore_cache(initial_cache_size, _batomese_wrapper, "compositescore")
 	{
 		OC_ASSERT(false, "Truth table from Handle not implemented yet");
 	}
@@ -1654,10 +1662,13 @@ public:
 	 * '$1' to $[arity]. This convention was required in [setup_features] in order
 	 * to map features with their respective values.
 	 * */
-	complete_truth_table(const Handle &handle, arity_t arity)
-			: super(pow2(arity)), _arity(arity)
+	complete_truth_table(const Handle &handle, arity_t arity, size_t initial_cache_size = 0)
+			: super(pow2(arity)), _arity(arity),
+			  _have_cache(0 < initial_cache_size),
+	          _batomese_cscore_cache(initial_cache_size, _batomese_wrapper, "compositescore")
 	{
-		populate(handle);
+		std::vector<ValueSeq> features(_arity);
+		populate(handle, features);
 	}
 
 	template<typename Func>
@@ -1719,12 +1730,29 @@ protected:
 	 * @param It from      beginning iterator of the vector containing values of variables.
 	 * @param It to        end iterator of vector containing values of variables.
 	 */
+
+	//complete_truth_table(size_t initial_cache_size = 0);
+
 	void setup_features(const Handle &handle, const std::vector<ValueSeq>& features);
 
-	void populate(const Handle &handle);
+	std::vector<ValueSeq> populate(const Handle &handle, std::vector<ValueSeq> &features);
 
-	void populate_features(std::vector<ValueSeq> &features);
+	std::vector<ValueSeq> populate_nocache(const Handle &handle, std::vector<ValueSeq> &features);
 
+	std::vector<ValueSeq> populate_features(std::vector<ValueSeq> &features);
+
+	struct batomese_wrapper : public std::unary_function<std::vector<ValueSeq>, std::vector<ValueSeq>>
+	{
+
+		std::vector<ValueSeq> operator()(const std::vector<ValueSeq> &) const;
+		complete_truth_table *self;
+	};
+
+
+	std::vector<ValueSeq> ff;
+	bool _have_cache;
+	batomese_wrapper _batomese_wrapper;
+	prr_cache_threaded<batomese_wrapper> _batomese_cscore_cache;
 	arity_t _arity;
 	mutable builtin_seq inputs;
 };
