@@ -921,12 +921,12 @@ std::vector<ValueSeq> complete_truth_table::populate(const Handle &handle, std::
 {
 	// Use the cache, if it is enabled.
 	if (_have_cache) return _batomese_cscore_cache(features);
-	return populate_nocache(handle, features);;
+	return populate_nocache(handle, features);
 }
 
-std::vector<ValueSeq> complete_truth_table::batomese_wrapper::operator()(const std::vector<ValueSeq> &features) const
+std::vector<ValueSeq> complete_truth_table::batomese_wrapper::operator()(const Handle &handle, std::vector<ValueSeq> &features) const
 {
-	return self->populate_features(features);
+	return self->populate_nocache(handle, features);
 }
 
 std::vector<ValueSeq> complete_truth_table::populate_features(std::vector<ValueSeq> &features)
@@ -943,15 +943,6 @@ std::vector<ValueSeq> complete_truth_table::populate_features(std::vector<ValueS
 	}
 
     return features;
-}
-
-std::vector<ValueSeq> complete_truth_table::cached_populate_features(std::vector<ValueSeq> &features)
-{
-    //logger().debug() << "cached_populate_features(), features="
-    //                 << features;
-    /// @todo replace by lru_cache once thread safe fixed
-    prr_cache_threaded<std::vector<ValueSeq>> populate_features(std::vector<ValueSeq> &features);
-    return populate_features(features);
 }
 
 void complete_truth_table::setup_features(const Handle &handle, const std::vector<ValueSeq> &features)

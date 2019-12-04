@@ -1744,7 +1744,7 @@ protected:
 	struct batomese_wrapper : public std::unary_function<std::vector<ValueSeq>, std::vector<ValueSeq>>
 	{
 
-		std::vector<ValueSeq> operator()(const std::vector<ValueSeq> &) const;
+		std::vector<ValueSeq> operator()(const Handle &handle, std::vector<ValueSeq> &) const;
 		complete_truth_table *self;
 	};
 
