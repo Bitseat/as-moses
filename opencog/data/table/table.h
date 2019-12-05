@@ -1624,12 +1624,16 @@ class complete_truth_table : public bool_seq
 public:
 	typedef bool_seq super;
 
-	complete_truth_table(size_t initial_cache_size = 0)
-	: _have_cache(0 < initial_cache_size),
-	  _batomese_cscore_cache(initial_cache_size, _batomese_wrapper, "compositescore")
-	{
-		_batomese_wrapper.self = this;
-	}
+	complete_truth_table(const Handle &handle, arity_t arity, size_t initial_cache_size = 0);
+//	: _have_cache(0 < initial_cache_size),
+//	  _batomese_cscore_cache(initial_cache_size, _batomese_wrapper, "compositescore")
+//	{
+//		_batomese_wrapper.self = this;
+//	}
+	//complete_truth_table(size_t initial_cache_size = 0);
+
+//	complete_truth_table()
+//	{}
 
 	template<typename It>
 	complete_truth_table(It from, It to) : super(from, to)
@@ -1650,26 +1654,24 @@ public:
 		populate(tr);
 	}
 
-	complete_truth_table(const Handle &, size_t initial_cache_size = 0)
-	: _have_cache(0 < initial_cache_size),
-	  _batomese_cscore_cache(initial_cache_size, _batomese_wrapper, "compositescore")
-	{
-		OC_ASSERT(false, "Truth table from Handle not implemented yet");
-	}
+//	complete_truth_table(const Handle &, std::vector<ValueSeq> &)
+//	{
+//		OC_ASSERT(false, "Truth table from Handle not implemented yet");
+//	}
 
 	/**
 	 * This constructor assumes the program[handle] to have its features named
 	 * '$1' to $[arity]. This convention was required in [setup_features] in order
 	 * to map features with their respective values.
 	 * */
-	complete_truth_table(const Handle &handle, arity_t arity, size_t initial_cache_size = 0)
-			: super(pow2(arity)), _arity(arity),
-			  _have_cache(0 < initial_cache_size),
-	          _batomese_cscore_cache(initial_cache_size, _batomese_wrapper, "compositescore")
-	{
-		std::vector<ValueSeq> features(_arity);
-		populate(handle, features);
-	}
+//	complete_truth_table(const Handle &handle, arity_t arity, size_t initial_cache_size = 0)
+//			: super(pow2(arity)), _arity(arity),
+//			  _have_cache(0 < initial_cache_size),
+//	          _batomese_cscore_cache(initial_cache_size, _batomese_wrapper, "compositescore")
+//	{
+//		std::vector<ValueSeq> features(_arity);
+//		populate(handle, features);
+//	}
 
 	template<typename Func>
 	complete_truth_table(const Func &f, arity_t arity)
@@ -1709,6 +1711,8 @@ public:
 	 */
 	bool same_complete_truth_table(const combo_tree &tr) const;
 
+	std::vector<ValueSeq> populate(const Handle &, std::vector<ValueSeq> &);
+
 protected:
 	template<typename T>
 	void populate(const tree<T> &tr)
@@ -1735,16 +1739,14 @@ protected:
 
 	void setup_features(const Handle &handle, const std::vector<ValueSeq>& features);
 
-	std::vector<ValueSeq> populate(const Handle &handle, std::vector<ValueSeq> &features);
-
 	std::vector<ValueSeq> populate_nocache(const Handle &handle, std::vector<ValueSeq> &features);
 
 	std::vector<ValueSeq> populate_features(std::vector<ValueSeq> &features);
 
-	struct batomese_wrapper : public std::unary_function<std::vector<ValueSeq>, std::vector<ValueSeq>>
+	struct batomese_wrapper : public std::unary_function<Handle, std::vector<ValueSeq>>
 	{
 
-		std::vector<ValueSeq> operator()(const Handle &handle, std::vector<ValueSeq> &) const;
+		std::vector<ValueSeq> operator()(const Handle &, std::vector<ValueSeq> &) const;
 		complete_truth_table *self;
 	};
 

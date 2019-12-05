@@ -890,6 +890,13 @@ bool complete_truth_table::same_complete_truth_table(const combo_tree &tr) const
 	return true;
 }
 
+complete_truth_table::complete_truth_table(const Handle &handle, arity_t arity, size_t initial_cache_size)
+		: _have_cache(0 < initial_cache_size),
+		  _batomese_cscore_cache(initial_cache_size, _batomese_wrapper, "truthtable")
+{
+	_batomese_wrapper.self = this;
+}
+
 std::vector<ValueSeq> complete_truth_table::populate_nocache(const Handle &handle, std::vector<ValueSeq> &features)
 {
 	// create a vector containing values for each feature or arity.
@@ -920,7 +927,7 @@ std::vector<ValueSeq> complete_truth_table::populate_nocache(const Handle &handl
 std::vector<ValueSeq> complete_truth_table::populate(const Handle &handle, std::vector<ValueSeq> &features)
 {
 	// Use the cache, if it is enabled.
-	if (_have_cache) return _batomese_cscore_cache(features);
+	if (_have_cache) return _batomese_cscore_cache(handle, features);
 	return populate_nocache(handle, features);
 }
 
