@@ -1723,10 +1723,11 @@ protected:
 
 	void populate(const Handle &handle);
 
-	void populate_features(std::vector<ValueSeq> &features);
+	std::vector<ValueSeq> populate_features(std::vector<ValueSeq> &features);
 
 	arity_t _arity;
 	mutable builtin_seq inputs;
+	AtomSpace *as;
 };
 
 }

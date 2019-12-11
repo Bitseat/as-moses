@@ -45,6 +45,7 @@
 #include <opencog/combo/combo/convert_ann_combo.h>
 #include <opencog/atomese/atomese_utils/constants.h>
 #include <opencog/utils/valueUtils.h>
+#include <opencog/atomspace/AtomSpace.h>
 
 #include "table.h"
 #include "table_io.h"
@@ -895,10 +896,28 @@ void complete_truth_table::populate(const Handle &handle)
 	// create a vector containing values for each feature or arity.
 	// this will contain the inputs of the truth table.
 	std::vector<ValueSeq> features(_arity);
-	populate_features(features);
+	std::vector<ValueSeq> all_features(_arity);
+	//all_features = populate_features(features);
+	if (ValuePtr v = handle->getValue(atomese::value_key)) {
+		for (int j = 0; j < _arity; ++j) {
+			features[j].push_back(v);
+		}
+		all_features = features;
+	}
+
+	else{
+		all_features = populate_features(features);
+		Handle handle;
+		for (int j = 0; j < _arity; ++j){
+
+			ValueSeq value = features[j];
+			handle->setValue(atomese::value_key, ValuePtr(new LinkValue(value)));
+			as->add_atom(handle);
+		}
+	}
 
 	// map the values of inputs to the program.
-	setup_features(handle, features);
+	setup_features(handle, all_features);
 
 	atomese::Interpreter interpreter(atomese::value_key);
 	ValueSeq result = LinkValueCast(interpreter(handle))->value();
@@ -913,7 +932,7 @@ void complete_truth_table::populate(const Handle &handle)
 	std::transform(result.begin(), result.end(), begin(), bool_value_to_bool);
 }
 
-void complete_truth_table::populate_features(std::vector<ValueSeq> &features)
+std::vector<ValueSeq> complete_truth_table::populate_features(std::vector<ValueSeq> &features)
 {
 	auto it = begin();
 	for (int i = 0; it != end(); ++i, ++it) {
@@ -925,6 +944,8 @@ void complete_truth_table::populate_features(std::vector<ValueSeq> &features)
 			features[j].push_back(v);
 		}
 	}
+
+	return features;
 }
 
 void complete_truth_table::setup_features(const Handle &handle, const std::vector<ValueSeq> &features)
